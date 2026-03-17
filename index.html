@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TaskBoard</title>
   <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
   <main class="app">
     <section class="todo-card">
       <header class="header">
         <div>
-          <p class="tag">Organização Pessoal</p>
+          <p class="tag">Organização pessoal</p>
           <h1>TaskBoard</h1>
           <p class="subtitle">Gerencie suas tarefas com mais praticidade.</p>
         </div>
       </header>
 
-      <section class="new-tarefa">
-        <input type="text" class="input-tarefa" placeholder="Digite sua tarefa...">
+      <section class="nova-tarefa">
+        <input type="text" class="input-tarefa" placeholder="Digite sua tarefa..."/>
+        <button class="btn-tarefa">Adicionar</button>
       </section>
 
       <section class="topbar">
         <div class="info">
-          <span>Total: <strong class="total">0</strong></span>
+          <span>Total: <strong id="total">0</strong></span>
         </div>
 
         <div class="filtros">
-          <button class="filtro-ativo" data-filtro="todas">Todas</button>
-          <button class="filtro" data-filtro="pedentes">Todas</button>
-          <button class="filtro ativo" data-filtro="concluidas">Todas</button>
+          <button class="filtro ativo" data-filtro="todas">Todas</button>
+          <button class="filtro" data-filtro="pendentes">Pendentes</button>
+          <button class="filtro" data-filtro="concluidas">Concluídas</button>
         </div>
       </section>
 
       <ul class="tarefas"></ul>
-      
+
       <p class="mensagem-vazia">Você ainda não adicionou nenhuma tarefa.</p>
 
       <div class="rodape-acoes">
@@ -43,6 +45,6 @@
     </section>
   </main>
 
-  <script src="assets/js/main.js"></script>
+  <script src="./assets/js/main.js"></script>
 </body>
 </html>
