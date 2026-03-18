@@ -6,8 +6,14 @@ const totalElement = document.querySelector('#total');
 const mensagemVazia = document.querySelector('.mensagem-vazia');
 const btnLimpar = document.querySelector('.btn-limpar');
 
+const modalEditarOverlay = document.querySelector('.modal-editar-overlay');
+const inputEditar = document.querySelector('.input-editar');
+const btnCancelar = document.querySelector('.btn-cancelar');
+const btnSalvar = document.querySelector('.btn-salvar');
+
 let tarefas = [];
 let filtroAtual = 'todas';
+let tarefaEmEdicaoId = null;
 
 function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000);
@@ -72,6 +78,46 @@ function alternarConclusao(id) {
   renderizarTarefas();
 }
 
+function abrirModalEdicao(id) {
+  const tarefa = tarefas.find(tarefa => tarefa.id === id);
+  if (!tarefa) return;
+
+  tarefaEmEdicaoId = id;
+  inputEditar.value = tarefa.texto;
+  modalEditarOverlay.classList.remove('hidden');
+  inputEditar.focus();
+}
+
+function fecharModalEdicao() {
+  modalEditarOverlay.classList.add('hidden');
+  inputEditar.value = '';
+  tarefaEmEdicaoId = null;
+}
+
+function salvarEdicao() {
+  const textoEditado = inputEditar.value.trim();
+
+  if (!textoEditado) {
+    alert('A tarefa não pode ficar vazia.');
+    return;
+  }
+
+  tarefas = tarefas.map(tarefa => {
+    if (tarefa.id === tarefaEmEdicaoId) {
+      return {
+        ...tarefa,
+        texto: textoEditado
+      };
+    }
+
+    return tarefa;
+  });
+
+  salvarTarefas();
+  renderizarTarefas();
+  fecharModalEdicao();
+}
+
 function limparConcluidas() {
   tarefas = tarefas.filter(tarefa => !tarefa.concluida);
   salvarTarefas();
@@ -114,6 +160,7 @@ function criarElementoTarefa(tarefa) {
     </div>
 
     <div class="tarefa-acoes">
+      <button class="btn-acao btn-editar">Editar</button>
       <button class="btn-acao btn-concluir">
         ${tarefa.concluida ? 'Desfazer' : 'Concluir'}
       </button>
@@ -161,6 +208,10 @@ listaTarefas.addEventListener('click', (e) => {
   if (e.target.classList.contains('btn-concluir')) {
     alternarConclusao(id);
   }
+
+  if (e.target.classList.contains('btn-editar')) {
+    abrirModalEdicao(id);
+  }
 });
 
 listaTarefas.addEventListener('change', (e) => {
@@ -185,6 +236,21 @@ filtros.forEach(botao => {
 
 btnLimpar.addEventListener('click', () => {
   limparConcluidas();
+});
+
+btnCancelar.addEventListener('click', fecharModalEdicao);
+btnSalvar.addEventListener('click', salvarEdicao);
+
+inputEditar.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    salvarEdicao();
+  }
+});
+
+modalEditarOverlay.addEventListener('click', (e) => {
+  if (e.target === modalEditarOverlay) {
+    fecharModalEdicao();
+  }
 });
 
 carregarTarefas();
