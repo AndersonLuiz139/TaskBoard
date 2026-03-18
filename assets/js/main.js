@@ -8,14 +8,14 @@ function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
 
-function salvarTarefa(){
+function salvarTarefas() {
   localStorage.setItem('tarefas', JSON.stringify(tarefas));
 }
 
-function carregarTarefa(){
+function carregarTarefas() {
   const tarefasSalvas = localStorage.getItem('tarefas');
 
-  if(!tarefasSalvas){
+  if (!tarefasSalvas) {
     tarefas = [];
     return;
   }
@@ -35,13 +35,30 @@ function adicionarTarefa(texto) {
 
   const novaTarefa = {
     id: gerarId(),
-    texto: textoLimpo
+    texto: textoLimpo,
+    concluida: false
   };
 
   tarefas.push(novaTarefa);
-  salvarTarefa();
+  salvarTarefas();
   renderizarTarefas();
   limparInput();
+}
+
+function alternarConclusao(id) {
+  tarefas = tarefas.map(tarefa => {
+    if (tarefa.id === id) {
+      return {
+        ...tarefa,
+        concluida: !tarefa.concluida
+      };
+    }
+
+    return tarefa;
+  });
+
+  salvarTarefas();
+  renderizarTarefas();
 }
 
 function criarElementoTarefa(tarefa) {
@@ -49,9 +66,20 @@ function criarElementoTarefa(tarefa) {
   li.classList.add('tarefa');
   li.dataset.id = tarefa.id;
 
+  if (tarefa.concluida) {
+    li.classList.add('concluida');
+  }
+
   li.innerHTML = `
     <div class="tarefa-conteudo">
+      <input type="checkbox" class="check-tarefa" ${tarefa.concluida ? 'checked' : ''}>
       <span class="tarefa-texto">${tarefa.texto}</span>
+    </div>
+
+    <div class="tarefa-acoes">
+      <button class="btn-acao btn-concluir">
+        ${tarefa.concluida ? 'Desfazer' : 'Concluir'}
+      </button>
     </div>
   `;
 
@@ -59,7 +87,7 @@ function criarElementoTarefa(tarefa) {
 }
 
 function renderizarTarefas() {
-  listaTarefas.textContent = '';
+  listaTarefas.innerHTML = '';
 
   tarefas.forEach(tarefa => {
     const li = criarElementoTarefa(tarefa);
@@ -77,5 +105,27 @@ inputTarefa.addEventListener('keypress', (e) => {
   }
 });
 
-carregarTarefa();
+listaTarefas.addEventListener('click', (e) => {
+  const li = e.target.closest('.tarefa');
+  if (!li) return;
+
+  const id = Number(li.dataset.id);
+
+  if (e.target.classList.contains('btn-concluir')) {
+    alternarConclusao(id);
+  }
+});
+
+listaTarefas.addEventListener('change', (e) => {
+  const li = e.target.closest('.tarefa');
+  if (!li) return;
+
+  const id = Number(li.dataset.id);
+
+  if (e.target.classList.contains('check-tarefa')) {
+    alternarConclusao(id);
+  }
+});
+
+carregarTarefas();
 renderizarTarefas();
