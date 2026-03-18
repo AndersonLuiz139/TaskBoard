@@ -319,6 +319,26 @@ body{
   display: none;
 }
 
+.btn-cancelar-apagar, .btn-confirmar-apagar {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.2s ease;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.btn-cancelar-apagar {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.btn-confirmar-apagar {
+  background: #dc2626;
+  color: white;
+}
+
 @media(max-width: 700px){
   .nova-tarefa{
     grid-template-columns: 1fr;

@@ -11,9 +11,14 @@ const inputEditar = document.querySelector('.input-editar');
 const btnCancelar = document.querySelector('.btn-cancelar');
 const btnSalvar = document.querySelector('.btn-salvar');
 
+const modalApagarOverlay = document.querySelector('.modal-apagar-overlay');
+const btnCancelarApagar = document.querySelector('.btn-cancelar-apagar');
+const btnConfirmarApagar = document.querySelector('.btn-confirmar-apagar');
+
 let tarefas = [];
 let filtroAtual = 'todas';
 let tarefaEmEdicaoId = null;
+let tarefaParaApagarId = null;
 
 function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000);
@@ -118,6 +123,23 @@ function salvarEdicao() {
   fecharModalEdicao();
 }
 
+function abrirModalApagar(id) {
+  tarefaParaApagarId = id;
+  modalApagarOverlay.classList.remove('hidden');
+}
+
+function fecharModalApagar() {
+  modalApagarOverlay.classList.add('hidden');
+  tarefaParaApagarId = null;
+}
+
+function confirmarApagarTarefa() {
+  if (tarefaParaApagarId === null) return;
+
+  removerTarefa(tarefaParaApagarId);
+  fecharModalApagar();
+}
+
 function limparConcluidas() {
   tarefas = tarefas.filter(tarefa => !tarefa.concluida);
   salvarTarefas();
@@ -202,7 +224,7 @@ listaTarefas.addEventListener('click', (e) => {
   const id = Number(li.dataset.id);
 
   if (e.target.classList.contains('btn-apagar')) {
-    removerTarefa(id);
+    abrirModalApagar(id);
   }
 
   if (e.target.classList.contains('btn-concluir')) {
@@ -250,6 +272,15 @@ inputEditar.addEventListener('keypress', (e) => {
 modalEditarOverlay.addEventListener('click', (e) => {
   if (e.target === modalEditarOverlay) {
     fecharModalEdicao();
+  }
+});
+
+btnCancelarApagar.addEventListener('click', fecharModalApagar);
+btnConfirmarApagar.addEventListener('click', confirmarApagarTarefa);
+
+modalApagarOverlay.addEventListener('click', (e) => {
+  if (e.target === modalApagarOverlay) {
+    fecharModalApagar();
   }
 });
 
