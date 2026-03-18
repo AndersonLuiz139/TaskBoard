@@ -1,8 +1,13 @@
 const inputTarefa = document.querySelector('.input-tarefa');
 const btnTarefa = document.querySelector('.btn-tarefa');
 const listaTarefas = document.querySelector('.tarefas');
+const filtros = document.querySelectorAll('.filtro');
+const totalElement = document.querySelector('#total');
+const mensagemVazia = document.querySelector('.mensagem-vazia');
+const btnLimpar = document.querySelector('.btn-limpar');
 
 let tarefas = [];
+let filtroAtual = 'todas';
 
 function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000);
@@ -45,6 +50,12 @@ function adicionarTarefa(texto) {
   limparInput();
 }
 
+function removerTarefa(id) {
+  tarefas = tarefas.filter(tarefa => tarefa.id !== id);
+  salvarTarefas();
+  renderizarTarefas();
+}
+
 function alternarConclusao(id) {
   tarefas = tarefas.map(tarefa => {
     if (tarefa.id === id) {
@@ -59,6 +70,32 @@ function alternarConclusao(id) {
 
   salvarTarefas();
   renderizarTarefas();
+}
+
+function limparConcluidas() {
+  tarefas = tarefas.filter(tarefa => !tarefa.concluida);
+  salvarTarefas();
+  renderizarTarefas();
+}
+
+function atualizarContador() {
+  totalElement.innerText = tarefas.length;
+}
+
+function filtrarTarefas(lista) {
+  if (filtroAtual === 'pendentes') {
+    return lista.filter(tarefa => !tarefa.concluida);
+  }
+
+  if (filtroAtual === 'concluidas') {
+    return lista.filter(tarefa => tarefa.concluida);
+  }
+
+  return lista;
+}
+
+function mostrarMensagemVazia(listaFiltrada) {
+  mensagemVazia.style.display = listaFiltrada.length === 0 ? 'block' : 'none';
 }
 
 function criarElementoTarefa(tarefa) {
@@ -80,6 +117,7 @@ function criarElementoTarefa(tarefa) {
       <button class="btn-acao btn-concluir">
         ${tarefa.concluida ? 'Desfazer' : 'Concluir'}
       </button>
+      <button class="btn-acao btn-apagar">Apagar</button>
     </div>
   `;
 
@@ -89,10 +127,15 @@ function criarElementoTarefa(tarefa) {
 function renderizarTarefas() {
   listaTarefas.innerHTML = '';
 
-  tarefas.forEach(tarefa => {
+  const tarefasFiltradas = filtrarTarefas(tarefas);
+
+  tarefasFiltradas.forEach(tarefa => {
     const li = criarElementoTarefa(tarefa);
     listaTarefas.appendChild(li);
   });
+
+  atualizarContador();
+  mostrarMensagemVazia(tarefasFiltradas);
 }
 
 btnTarefa.addEventListener('click', () => {
@@ -111,6 +154,10 @@ listaTarefas.addEventListener('click', (e) => {
 
   const id = Number(li.dataset.id);
 
+  if (e.target.classList.contains('btn-apagar')) {
+    removerTarefa(id);
+  }
+
   if (e.target.classList.contains('btn-concluir')) {
     alternarConclusao(id);
   }
@@ -125,6 +172,19 @@ listaTarefas.addEventListener('change', (e) => {
   if (e.target.classList.contains('check-tarefa')) {
     alternarConclusao(id);
   }
+});
+
+filtros.forEach(botao => {
+  botao.addEventListener('click', () => {
+    filtros.forEach(filtro => filtro.classList.remove('ativo'));
+    botao.classList.add('ativo');
+    filtroAtual = botao.dataset.filtro;
+    renderizarTarefas();
+  });
+});
+
+btnLimpar.addEventListener('click', () => {
+  limparConcluidas();
 });
 
 carregarTarefas();

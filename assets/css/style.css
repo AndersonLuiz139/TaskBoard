@@ -231,6 +231,10 @@ body{
   background: #16a34a;
 }
 
+.btn-apagar{
+  background: #dc2626 ;
+}
+
 @media(max-width: 700px){
   .nova-tarefa{
     grid-template-columns: 1fr;
