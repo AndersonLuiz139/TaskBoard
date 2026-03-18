@@ -8,6 +8,21 @@ function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
 
+function salvarTarefa(){
+  localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
+
+function carregarTarefa(){
+  const tarefasSalvas = localStorage.getItem('tarefas');
+
+  if(!tarefasSalvas){
+    tarefas = [];
+    return;
+  }
+
+  tarefas = JSON.parse(tarefasSalvas);
+}
+
 function limparInput() {
   inputTarefa.value = '';
   inputTarefa.focus();
@@ -24,6 +39,7 @@ function adicionarTarefa(texto) {
   };
 
   tarefas.push(novaTarefa);
+  salvarTarefa();
   renderizarTarefas();
   limparInput();
 }
@@ -60,3 +76,6 @@ inputTarefa.addEventListener('keypress', (e) => {
     adicionarTarefa(inputTarefa.value);
   }
 });
+
+carregarTarefa();
+renderizarTarefas();
