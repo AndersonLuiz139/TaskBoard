@@ -286,3 +286,10 @@ modalApagarOverlay.addEventListener('click', (e) => {
 
 carregarTarefas();
 renderizarTarefas();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    fecharModalEdicao();
+    fecharModalApagar();
+  }
+});
