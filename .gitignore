@@ -1,0 +1,20 @@
+# Instruções locais do Claude Code — ferramenta de desenvolvimento, não faz
+# parte do projeto e não vai para o repositório.
+CLAUDE.md
+.claude/
+
+node_modules/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Logs e temporários
+*.log
+.cache/
