@@ -1,22 +1,22 @@
-const inputTarefa = document.querySelector('.input-tarefa');
-const btnTarefa = document.querySelector('.btn-tarefa');
-const listaTarefas = document.querySelector('.tarefas');
-const filtros = document.querySelectorAll('.filtro');
-const totalElement = document.querySelector('#total');
-const mensagemVazia = document.querySelector('.mensagem-vazia');
-const btnLimpar = document.querySelector('.btn-limpar');
+const inputTarefa = document.querySelector(".input-tarefa");
+const btnTarefa = document.querySelector(".btn-tarefa");
+const listaTarefas = document.querySelector(".tarefas");
+const filtros = document.querySelectorAll(".filtro");
+const totalElement = document.querySelector("#total");
+const mensagemVazia = document.querySelector(".mensagem-vazia");
+const btnLimpar = document.querySelector(".btn-limpar");
 
-const modalEditarOverlay = document.querySelector('.modal-editar-overlay');
-const inputEditar = document.querySelector('.input-editar');
-const btnCancelar = document.querySelector('.btn-cancelar');
-const btnSalvar = document.querySelector('.btn-salvar');
+const modalEditarOverlay = document.querySelector(".modal-editar-overlay");
+const inputEditar = document.querySelector(".input-editar");
+const btnCancelar = document.querySelector(".btn-cancelar");
+const btnSalvar = document.querySelector(".btn-salvar");
 
-const modalApagarOverlay = document.querySelector('.modal-apagar-overlay');
-const btnCancelarApagar = document.querySelector('.btn-cancelar-apagar');
-const btnConfirmarApagar = document.querySelector('.btn-confirmar-apagar');
+const modalApagarOverlay = document.querySelector(".modal-apagar-overlay");
+const btnCancelarApagar = document.querySelector(".btn-cancelar-apagar");
+const btnConfirmarApagar = document.querySelector(".btn-confirmar-apagar");
 
 let tarefas = [];
-let filtroAtual = 'todas';
+let filtroAtual = "todas";
 let tarefaEmEdicaoId = null;
 let tarefaParaApagarId = null;
 
@@ -25,11 +25,11 @@ function gerarId() {
 }
 
 function salvarTarefas() {
-  localStorage.setItem('tarefas', JSON.stringify(tarefas));
+  localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
 function carregarTarefas() {
-  const tarefasSalvas = localStorage.getItem('tarefas');
+  const tarefasSalvas = localStorage.getItem("tarefas");
 
   if (!tarefasSalvas) {
     tarefas = [];
@@ -40,7 +40,7 @@ function carregarTarefas() {
 }
 
 function limparInput() {
-  inputTarefa.value = '';
+  inputTarefa.value = "";
   inputTarefa.focus();
 }
 
@@ -52,7 +52,7 @@ function adicionarTarefa(texto) {
   const novaTarefa = {
     id: gerarId(),
     texto: textoLimpo,
-    concluida: false
+    concluida: false,
   };
 
   tarefas.push(novaTarefa);
@@ -62,17 +62,17 @@ function adicionarTarefa(texto) {
 }
 
 function removerTarefa(id) {
-  tarefas = tarefas.filter(tarefa => tarefa.id !== id);
+  tarefas = tarefas.filter((tarefa) => tarefa.id !== id);
   salvarTarefas();
   renderizarTarefas();
 }
 
 function alternarConclusao(id) {
-  tarefas = tarefas.map(tarefa => {
+  tarefas = tarefas.map((tarefa) => {
     if (tarefa.id === id) {
       return {
         ...tarefa,
-        concluida: !tarefa.concluida
+        concluida: !tarefa.concluida,
       };
     }
 
@@ -84,18 +84,18 @@ function alternarConclusao(id) {
 }
 
 function abrirModalEdicao(id) {
-  const tarefa = tarefas.find(tarefa => tarefa.id === id);
+  const tarefa = tarefas.find((tarefa) => tarefa.id === id);
   if (!tarefa) return;
 
   tarefaEmEdicaoId = id;
   inputEditar.value = tarefa.texto;
-  modalEditarOverlay.classList.remove('hidden');
+  modalEditarOverlay.classList.remove("hidden");
   inputEditar.focus();
 }
 
 function fecharModalEdicao() {
-  modalEditarOverlay.classList.add('hidden');
-  inputEditar.value = '';
+  modalEditarOverlay.classList.add("hidden");
+  inputEditar.value = "";
   tarefaEmEdicaoId = null;
 }
 
@@ -103,15 +103,15 @@ function salvarEdicao() {
   const textoEditado = inputEditar.value.trim();
 
   if (!textoEditado) {
-    alert('A tarefa não pode ficar vazia.');
+    alert("A tarefa não pode ficar vazia.");
     return;
   }
 
-  tarefas = tarefas.map(tarefa => {
+  tarefas = tarefas.map((tarefa) => {
     if (tarefa.id === tarefaEmEdicaoId) {
       return {
         ...tarefa,
-        texto: textoEditado
+        texto: textoEditado,
       };
     }
 
@@ -125,11 +125,11 @@ function salvarEdicao() {
 
 function abrirModalApagar(id) {
   tarefaParaApagarId = id;
-  modalApagarOverlay.classList.remove('hidden');
+  modalApagarOverlay.classList.remove("hidden");
 }
 
 function fecharModalApagar() {
-  modalApagarOverlay.classList.add('hidden');
+  modalApagarOverlay.classList.add("hidden");
   tarefaParaApagarId = null;
 }
 
@@ -141,7 +141,7 @@ function confirmarApagarTarefa() {
 }
 
 function limparConcluidas() {
-  tarefas = tarefas.filter(tarefa => !tarefa.concluida);
+  tarefas = tarefas.filter((tarefa) => !tarefa.concluida);
   salvarTarefas();
   renderizarTarefas();
 }
@@ -151,40 +151,40 @@ function atualizarContador() {
 }
 
 function filtrarTarefas(lista) {
-  if (filtroAtual === 'pendentes') {
-    return lista.filter(tarefa => !tarefa.concluida);
+  if (filtroAtual === "pendentes") {
+    return lista.filter((tarefa) => !tarefa.concluida);
   }
 
-  if (filtroAtual === 'concluidas') {
-    return lista.filter(tarefa => tarefa.concluida);
+  if (filtroAtual === "concluidas") {
+    return lista.filter((tarefa) => tarefa.concluida);
   }
 
   return lista;
 }
 
 function mostrarMensagemVazia(listaFiltrada) {
-  mensagemVazia.style.display = listaFiltrada.length === 0 ? 'block' : 'none';
+  mensagemVazia.style.display = listaFiltrada.length === 0 ? "block" : "none";
 }
 
 function criarElementoTarefa(tarefa) {
-  const li = document.createElement('li');
-  li.classList.add('tarefa');
+  const li = document.createElement("li");
+  li.classList.add("tarefa");
   li.dataset.id = tarefa.id;
 
   if (tarefa.concluida) {
-    li.classList.add('concluida');
+    li.classList.add("concluida");
   }
 
   li.innerHTML = `
     <div class="tarefa-conteudo">
-      <input type="checkbox" class="check-tarefa" ${tarefa.concluida ? 'checked' : ''}>
+      <input type="checkbox" class="check-tarefa" ${tarefa.concluida ? "checked" : ""}>
       <span class="tarefa-texto">${tarefa.texto}</span>
     </div>
 
     <div class="tarefa-acoes">
       <button class="btn-acao btn-editar">Editar</button>
       <button class="btn-acao btn-concluir">
-        ${tarefa.concluida ? 'Desfazer' : 'Concluir'}
+        ${tarefa.concluida ? "Desfazer" : "Concluir"}
       </button>
       <button class="btn-acao btn-apagar">Apagar</button>
     </div>
@@ -194,11 +194,11 @@ function criarElementoTarefa(tarefa) {
 }
 
 function renderizarTarefas() {
-  listaTarefas.innerHTML = '';
+  listaTarefas.innerHTML = "";
 
   const tarefasFiltradas = filtrarTarefas(tarefas);
 
-  tarefasFiltradas.forEach(tarefa => {
+  tarefasFiltradas.forEach((tarefa) => {
     const li = criarElementoTarefa(tarefa);
     listaTarefas.appendChild(li);
   });
@@ -207,78 +207,78 @@ function renderizarTarefas() {
   mostrarMensagemVazia(tarefasFiltradas);
 }
 
-btnTarefa.addEventListener('click', () => {
+btnTarefa.addEventListener("click", () => {
   adicionarTarefa(inputTarefa.value);
 });
 
-inputTarefa.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
+inputTarefa.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
     adicionarTarefa(inputTarefa.value);
   }
 });
 
-listaTarefas.addEventListener('click', (e) => {
-  const li = e.target.closest('.tarefa');
+listaTarefas.addEventListener("click", (e) => {
+  const li = e.target.closest(".tarefa");
   if (!li) return;
 
   const id = Number(li.dataset.id);
 
-  if (e.target.classList.contains('btn-apagar')) {
+  if (e.target.classList.contains("btn-apagar")) {
     abrirModalApagar(id);
   }
 
-  if (e.target.classList.contains('btn-concluir')) {
+  if (e.target.classList.contains("btn-concluir")) {
     alternarConclusao(id);
   }
 
-  if (e.target.classList.contains('btn-editar')) {
+  if (e.target.classList.contains("btn-editar")) {
     abrirModalEdicao(id);
   }
 });
 
-listaTarefas.addEventListener('change', (e) => {
-  const li = e.target.closest('.tarefa');
+listaTarefas.addEventListener("change", (e) => {
+  const li = e.target.closest(".tarefa");
   if (!li) return;
 
   const id = Number(li.dataset.id);
 
-  if (e.target.classList.contains('check-tarefa')) {
+  if (e.target.classList.contains("check-tarefa")) {
     alternarConclusao(id);
   }
 });
 
-filtros.forEach(botao => {
-  botao.addEventListener('click', () => {
-    filtros.forEach(filtro => filtro.classList.remove('ativo'));
-    botao.classList.add('ativo');
+filtros.forEach((botao) => {
+  botao.addEventListener("click", () => {
+    filtros.forEach((filtro) => filtro.classList.remove("ativo"));
+    botao.classList.add("ativo");
     filtroAtual = botao.dataset.filtro;
     renderizarTarefas();
   });
 });
 
-btnLimpar.addEventListener('click', () => {
+btnLimpar.addEventListener("click", () => {
   limparConcluidas();
 });
 
-btnCancelar.addEventListener('click', fecharModalEdicao);
-btnSalvar.addEventListener('click', salvarEdicao);
+btnCancelar.addEventListener("click", fecharModalEdicao);
+btnSalvar.addEventListener("click", salvarEdicao);
 
-inputEditar.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
+inputEditar.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
     salvarEdicao();
   }
 });
 
-modalEditarOverlay.addEventListener('click', (e) => {
+modalEditarOverlay.addEventListener("click", (e) => {
   if (e.target === modalEditarOverlay) {
     fecharModalEdicao();
   }
 });
 
-btnCancelarApagar.addEventListener('click', fecharModalApagar);
-btnConfirmarApagar.addEventListener('click', confirmarApagarTarefa);
+btnCancelarApagar.addEventListener("click", fecharModalApagar);
+btnConfirmarApagar.addEventListener("click", confirmarApagarTarefa);
 
-modalApagarOverlay.addEventListener('click', (e) => {
+modalApagarOverlay.addEventListener("click", (e) => {
   if (e.target === modalApagarOverlay) {
     fecharModalApagar();
   }
@@ -287,8 +287,8 @@ modalApagarOverlay.addEventListener('click', (e) => {
 carregarTarefas();
 renderizarTarefas();
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
     fecharModalEdicao();
     fecharModalApagar();
   }

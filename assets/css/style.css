@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
-:root{
+:root {
   --bg-1: #111827;
   --bg-2: #1f2937;
   --card: #fff;
@@ -13,26 +13,26 @@
   --gray-800: #1f2937;
 }
 
-*{
+* {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
-body{
+body {
   background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
   min-height: 100vh;
   padding: 30px 16px;
 }
 
-.app{
+.app {
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
-.todo-card{
+.todo-card {
   width: 100%;
   max-width: 800px;
   background: rgba(255, 255, 255, 0.96);
@@ -41,11 +41,11 @@ body{
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
 }
 
-.header{
+.header {
   margin-bottom: 24px;
 }
 
-.tag{
+.tag {
   display: inline-block;
   background: #ede9fe;
   color: var(--primary);
@@ -56,24 +56,24 @@ body{
   margin-bottom: 12px;
 }
 
-.header h1{
+.header h1 {
   font-size: 2.2rem;
   color: var(--gray-800);
   margin-bottom: 8px;
 }
 
-.subtitle{
+.subtitle {
   color: var(--gray-600);
 }
 
-.nova-tarefa{
+.nova-tarefa {
   display: grid;
   grid-template-columns: 1fr 160px;
   gap: 12px;
   margin-bottom: 22px;
 }
 
-.input-tarefa{
+.input-tarefa {
   width: 100%;
   height: 54px;
   border: 2px solid var(--gray-200);
@@ -83,20 +83,22 @@ body{
   transition: 0.2 ease;
 }
 
-.input-tarefa:focus{
+.input-tarefa:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
   outline: none;
 }
 
-.btn-tarefa, .filtro, .btn.limpar {
+.btn-tarefa,
+.filtro,
+.btn.limpar {
   border: none;
   cursor: pointer;
   font-family: inherit;
   transition: 0.5s ease;
 }
 
-.btn-tarefa{
+.btn-tarefa {
   background: var(--primary);
   color: #fff;
   border-radius: 14px;
@@ -105,11 +107,11 @@ body{
   transition: 0.2 ease;
 }
 
-.btn-tarefa:hover{
+.btn-tarefa:hover {
   background: var(--primary-dark);
 }
 
-.topbar{
+.topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -118,18 +120,18 @@ body{
   margin-bottom: 22px;
 }
 
-.info{
+.info {
   color: var(--gray-800);
   font-weight: 500;
 }
 
-.filtros{
+.filtros {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.filtro{
+.filtro {
   background: var(--gray-100);
   color: var(--gray-600);
   padding: 10px 15px;
@@ -137,12 +139,12 @@ body{
   font-weight: 600;
 }
 
-.filtro.ativo{
+.filtro.ativo {
   background: var(--primary);
   color: #fff;
 }
 
-.tarefas{
+.tarefas {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -158,7 +160,9 @@ body{
   justify-content: space-between;
   gap: 14px;
   align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .tarefa:hover {
@@ -166,33 +170,33 @@ body{
   box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
 }
 
-.tarefa-conteudo{
+.tarefa-conteudo {
   display: flex;
   align-items: center;
   gap: 12px;
   flex: 1;
 }
 
-.tarefa-texto{
+.tarefa-texto {
   color: var(--gray-800);
   font-size: 1rem;
   word-break: break-word;
 }
 
-.mensagem-vazia{
+.mensagem-vazia {
   text-align: center;
   color: var(--gray-400);
   margin-top: 24px;
   display: none;
 }
 
-.rodape-acoes{
+.rodape-acoes {
   margin-top: 24px;
   display: flex;
   justify-content: flex-end;
 }
 
-.btn-limpar{
+.btn-limpar {
   background: var(--gray-800);
   color: #fff;
   padding: 12px 18px;
@@ -201,28 +205,28 @@ body{
   cursor: pointer;
 }
 
-.btn-limpar:hover{
+.btn-limpar:hover {
   background: #111827;
 }
 
-.check-tarefa{
+.check-tarefa {
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
 
-.tarefa.concluida .tarefa-texto{
+.tarefa.concluida .tarefa-texto {
   text-decoration: line-through;
   color: var(--gray-400);
 }
 
-.tarefa-acoes{
+.tarefa-acoes {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.btn-acao{
+.btn-acao {
   padding: 10px 40px;
   border-radius: 12px;
   color: #fff;
@@ -233,12 +237,12 @@ body{
   transition: 0.2s ease;
 }
 
-.btn-concluir{
+.btn-concluir {
   background: #16a34a;
 }
 
-.btn-apagar{
-  background: #dc2626 ;
+.btn-apagar {
+  background: #dc2626;
 }
 
 .btn-editar {
@@ -285,7 +289,9 @@ body{
   z-index: 999;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.28s ease, visibility 0.28s ease;
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease;
 }
 
 .modal {
@@ -297,7 +303,9 @@ body{
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
   opacity: 1;
   transform: translateY(0) scale(1);
-  transition: opacity 0.28s ease, transform 0.28s ease;
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
 }
 
 .modal h2 {
@@ -340,7 +348,8 @@ body{
   transform: translateY(18px) scale(0.96);
 }
 
-.btn-cancelar-apagar, .btn-confirmar-apagar {
+.btn-cancelar-apagar,
+.btn-confirmar-apagar {
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -360,17 +369,17 @@ body{
   color: white;
 }
 
-@media(max-width: 700px){
-  .nova-tarefa{
+@media (max-width: 700px) {
+  .nova-tarefa {
     grid-template-columns: 1fr;
   }
 
-  .tarefa{
+  .tarefa {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .tarefa-acoes{
+  .tarefa-acoes {
     justify-content: flex-end;
   }
 }
