@@ -1,7 +1,11 @@
 // Regras de domínio
 
 export function gerarId() {
-  return Date.now() + Math.floor(Math.random() * 1000);
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 export function criarTarefa(texto) {

@@ -14,20 +14,39 @@ export function criarElementoTarefa(tarefa) {
     li.classList.add("concluida");
   }
 
-  li.innerHTML = `
-    <div class="tarefa-conteudo">
-      <input type="checkbox" class="check-tarefa" ${tarefa.concluida ? "checked" : ""}>
-      <span class="tarefa-texto">${tarefa.texto}</span>
-    </div>
+  const conteudo = document.createElement("div");
+  conteudo.className = "tarefa-conteudo";
 
-    <div class="tarefa-acoes">
-      <button class="btn-acao btn-editar">Editar</button>
-      <button class="btn-acao btn-concluir">
-        ${tarefa.concluida ? "Desfazer" : "Concluir"}
-      </button>
-      <button class="btn-acao btn-apagar">Apagar</button>
-    </div>
-  `;
+  const check = document.createElement("input");
+  check.type = "checkbox";
+  check.className = "check-tarefa";
+  check.checked = tarefa.concluida;
+
+  const texto = document.createElement("span");
+  texto.className = "tarefa-texto";
+  texto.textContent = tarefa.texto;
+
+  conteudo.append(check, texto);
+
+  const acoes = document.createElement("div");
+  acoes.className = "tarefa-acoes";
+
+  const botoes = [
+    ["btn-editar", "Editar"],
+    ["btn-concluir", tarefa.concluida ? "Desfazer" : "Concluir"],
+    ["btn-apagar", "Apagar"],
+  ];
+
+  botoes.forEach(([classe, rotulo]) => {
+    const botao = document.createElement("button");
+
+    botao.className = `btn-acao ${classe}`;
+    botao.textContent = rotulo;
+
+    acoes.appendChild(botao);
+  });
+
+  li.append(conteudo, acoes);
 
   return li;
 }

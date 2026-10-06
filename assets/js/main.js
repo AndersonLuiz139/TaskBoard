@@ -49,7 +49,7 @@ listaTarefas.addEventListener("click", (evento) => {
   const li = evento.target.closest(".tarefa");
 
   if (!li) return;
-  const id = Number(li.dataset.id);
+  const id = li.dataset.id;
   if (evento.target.classList.contains("btn-apagar")) {
     abrirModalApagar(id);
   }
@@ -67,7 +67,7 @@ listaTarefas.addEventListener("change", (evento) => {
   const li = evento.target.closest(".tarefa");
   if (!li) return;
 
-  const id = Number(li.dataset.id);
+  const id = li.dataset.id;
 
   if (evento.target.classList.contains("check-tarefa")) {
     atualizarTarefas((tarefas) => alternarConclusao(tarefas, id));

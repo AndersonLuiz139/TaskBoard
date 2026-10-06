@@ -7,7 +7,10 @@ export function carregarTarefas() {
 
   if (!tarefasSalvas) return [];
 
-  return JSON.parse(tarefasSalvas);
+  return JSON.parse(tarefasSalvas).map((tarefa) => ({
+    ...tarefa,
+    id: String(tarefa.id),
+  }));
 }
 
 export function salvarTarefas(tarefas) {
