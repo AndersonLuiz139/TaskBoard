@@ -9,6 +9,7 @@ import {
   iniciarEstado,
   obterTarefa,
 } from "./estado.js";
+import { abrirModal, confirmar, fecharModal, iniciarModais } from "./modais.js";
 import { renderizar } from "./render.js";
 import { usandoMemoria } from "./storage.js";
 import {
@@ -102,6 +103,12 @@ elementos.btnLimpar.addEventListener("click", () => {
  * Modal de edição
  * ------------------------------------------------------------------ */
 
+function focarAcaoDaTarefa(id, seletor) {
+  setTimeout(() => {
+    listaTarefas.querySelector(`[data-id="${CSS.escape(id)}"] ${seletor}`)?.focus();
+  }, 0);
+}
+
 function abrirModalEdicao(id) {
   const tarefa = obterTarefa(id);
 
@@ -109,14 +116,15 @@ function abrirModalEdicao(id) {
 
   estado.tarefaEmEdicaoId = id;
   elementos.inputEditar.value = tarefa.texto;
-  elementos.modalEditarOverlay.classList.remove("hidden");
-  elementos.inputEditar.focus();
-}
 
-function fecharModalEdicao() {
-  elementos.modalEditarOverlay.classList.add("hidden");
-  elementos.inputEditar.value = "";
-  estado.tarefaEmEdicaoId = null;
+  abrirModal(elementos.modalEditar, {
+    focar: elementos.inputEditar,
+    selecionar: true,
+    aoFechar: () => {
+      elementos.inputEditar.value = "";
+      estado.tarefaEmEdicaoId = null;
+    },
+  });
 }
 
 function salvarEdicao() {
@@ -131,10 +139,10 @@ function salvarEdicao() {
 
   aplicar((tarefas) => editarTexto(tarefas, id, textoEditado));
 
-  fecharModalEdicao();
+  fecharModal();
+  focarAcaoDaTarefa(id, ".btn-editar");
 }
 
-elementos.btnCancelar.addEventListener("click", fecharModalEdicao);
 elementos.btnSalvar.addEventListener("click", salvarEdicao);
 
 elementos.inputEditar.addEventListener("keypress", (evento) => {
@@ -143,56 +151,31 @@ elementos.inputEditar.addEventListener("keypress", (evento) => {
   }
 });
 
-elementos.modalEditarOverlay.addEventListener("click", (evento) => {
-  if (evento.target === elementos.modalEditarOverlay) {
-    fecharModalEdicao();
-  }
-});
-
 /* ------------------------------------------------------------------ *
  * Modal de exclusão
  * ------------------------------------------------------------------ */
 
 function abrirModalApagar(id) {
-  estado.tarefaParaApagarId = id;
-  elementos.modalApagarOverlay.classList.remove("hidden");
+  const tarefa = obterTarefa(id);
+
+  if (!tarefa) return;
+
+  confirmar({
+    titulo: "Apagar tarefa",
+    mensagem: `Tem certeza que deseja apagar "${tarefa.texto}"?`,
+    rotuloConfirmar: "Apagar",
+    aoConfirmar: () => {
+      aplicar((tarefas) => removerTarefa(tarefas, id));
+      elementos.inputTarefa.focus();
+    },
+  });
 }
-
-function fecharModalApagar() {
-  elementos.modalApagarOverlay.classList.add("hidden");
-  estado.tarefaParaApagarId = null;
-}
-
-function confirmarApagarTarefa() {
-  if (estado.tarefaParaApagarId === null) return;
-
-  const id = estado.tarefaParaApagarId;
-
-  aplicar((tarefas) => removerTarefa(tarefas, id));
-
-  fecharModalApagar();
-}
-
-elementos.btnCancelarApagar.addEventListener("click", fecharModalApagar);
-elementos.btnConfirmarApagar.addEventListener("click", confirmarApagarTarefa);
-
-elementos.modalApagarOverlay.addEventListener("click", (evento) => {
-  if (evento.target === elementos.modalApagarOverlay) {
-    fecharModalApagar();
-  }
-});
-
-document.addEventListener("keydown", (evento) => {
-  if (evento.key === "Escape") {
-    fecharModalEdicao();
-    fecharModalApagar();
-  }
-});
 
 /* ------------------------------------------------------------------ *
  * Inicialização
  * ------------------------------------------------------------------ */
 
+iniciarModais();
 assinar(renderizar);
 
 const avisoInicial = iniciarEstado();

@@ -45,9 +45,15 @@
     </section>
   </main>
 
-    <div class="modal-overlay hidden modal-editar-overlay">
-    <div class="modal">
-      <h2>Editar tarefa</h2>
+  <div class="modal-overlay hidden" data-modal="editar">
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-editar"
+      tabindex="-1"
+    >
+      <h2 id="titulo-editar">Editar tarefa</h2>
       <p class="modal-texto">Altere o texto da sua tarefa.</p>
 
       <input
@@ -57,25 +63,30 @@
       />
 
       <div class="modal-acoes">
-        <button class="btn-cancelar">Cancelar</button>
-        <button class="btn-salvar">Salvar</button>
+        <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
+        <button type="button" class="btn-salvar">Salvar</button>
       </div>
     </div>
   </div>
 
-  <div class="modal-overlay hidden modal-apagar-overlay">
-  <div class="modal modal-confirmacao">
-    <h2>Apagar tarefa</h2>
-    <p class="modal-texto">
-      Tem certeza que deseja apagar esta tarefa?
-    </p>
+  <div class="modal-overlay hidden" data-modal="confirmar">
+    <div
+      class="modal modal-confirmacao"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-confirmar"
+      aria-describedby="texto-confirmar"
+      tabindex="-1"
+    >
+      <h2 id="titulo-confirmar">Apagar tarefa</h2>
+      <p class="modal-texto" id="texto-confirmar"></p>
 
-    <div class="modal-acoes">
-      <button class="btn-cancelar-apagar">Cancelar</button>
-      <button class="btn-confirmar-apagar">Apagar</button>
+      <div class="modal-acoes">
+        <button type="button" class="btn-cancelar-modal" data-fechar-modal>Cancelar</button>
+        <button type="button" class="btn-confirmar">Apagar</button>
+      </div>
     </div>
   </div>
-</div>
 
   <script type="module" src="assets/js/main.js"></script>
 </body>

@@ -10,12 +10,12 @@ export const elementos = {
   mensagemVazia: q(".mensagem-vazia"),
   btnLimpar: q(".btn-limpar"),
 
-  modalEditarOverlay: q(".modal-editar-overlay"),
+  modalEditar: q('[data-modal="editar"]'),
   inputEditar: q(".input-editar"),
-  btnCancelar: q(".btn-cancelar"),
   btnSalvar: q(".btn-salvar"),
 
-  modalApagarOverlay: q(".modal-apagar-overlay"),
-  btnCancelarApagar: q(".btn-cancelar-apagar"),
-  btnConfirmarApagar: q(".btn-confirmar-apagar"),
+  modalConfirmar: q('[data-modal="confirmar"]'),
+  tituloConfirmar: q("#titulo-confirmar"),
+  textoConfirmar: q("#texto-confirmar"),
+  btnConfirmar: q(".btn-confirmar"),
 };
