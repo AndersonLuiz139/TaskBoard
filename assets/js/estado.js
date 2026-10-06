@@ -21,8 +21,11 @@ function notificar() {
 }
 
 export function iniciarEstado() {
-  estado.tarefas = storage.carregarTarefas();
+  const { tarefas, aviso } = storage.carregarTarefas();
+
+  estado.tarefas = tarefas;
   notificar();
+  return aviso;
 }
 
 export function atualizarTarefas(transformacao) {
@@ -31,8 +34,10 @@ export function atualizarTarefas(transformacao) {
       ? transformacao(estado.tarefas)
       : transformacao;
 
-  storage.salvarTarefas(estado.tarefas);
+  const { aviso } = storage.salvarTarefas(estado.tarefas);
+
   notificar();
+  return aviso;
 }
 
 export function definirUI(parcial) {

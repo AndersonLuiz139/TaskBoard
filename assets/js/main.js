@@ -10,6 +10,7 @@ import {
   obterTarefa,
 } from "./estado.js";
 import { renderizar } from "./render.js";
+import { usandoMemoria } from "./storage.js";
 import {
   alternarConclusao,
   criarTarefa,
@@ -19,6 +20,12 @@ import {
 } from "./tarefas.js";
 
 const { listaTarefas } = elementos;
+
+function aplicar(transformacao) {
+  const aviso = atualizarTarefas(transformacao);
+
+  if (aviso) console.warn(aviso);
+}
 
 function limparInput() {
   elementos.inputTarefa.value = "";
@@ -30,7 +37,7 @@ function adicionarTarefa(texto) {
 
   if (!textoLimpo) return;
 
-  atualizarTarefas((tarefas) => [...tarefas, criarTarefa(textoLimpo)]);
+  aplicar((tarefas) => [...tarefas, criarTarefa(textoLimpo)]);
 
   limparInput();
 }
@@ -55,7 +62,7 @@ listaTarefas.addEventListener("click", (evento) => {
   }
 
   if (evento.target.classList.contains("btn-concluir")) {
-    atualizarTarefas((tarefas) => alternarConclusao(tarefas, id));
+    aplicar((tarefas) => alternarConclusao(tarefas, id));
   }
 
   if (evento.target.classList.contains("btn-editar")) {
@@ -70,7 +77,7 @@ listaTarefas.addEventListener("change", (evento) => {
   const id = li.dataset.id;
 
   if (evento.target.classList.contains("check-tarefa")) {
-    atualizarTarefas((tarefas) => alternarConclusao(tarefas, id));
+    aplicar((tarefas) => alternarConclusao(tarefas, id));
   }
 });
 
@@ -88,7 +95,7 @@ elementos.filtros.forEach((botao) => {
 });
 
 elementos.btnLimpar.addEventListener("click", () => {
-  atualizarTarefas(limparConcluidas);
+  aplicar(limparConcluidas);
 });
 
 /* ------------------------------------------------------------------ *
@@ -122,7 +129,7 @@ function salvarEdicao() {
 
   const id = estado.tarefaEmEdicaoId;
 
-  atualizarTarefas((tarefas) => editarTexto(tarefas, id, textoEditado));
+  aplicar((tarefas) => editarTexto(tarefas, id, textoEditado));
 
   fecharModalEdicao();
 }
@@ -161,7 +168,7 @@ function confirmarApagarTarefa() {
 
   const id = estado.tarefaParaApagarId;
 
-  atualizarTarefas((tarefas) => removerTarefa(tarefas, id));
+  aplicar((tarefas) => removerTarefa(tarefas, id));
 
   fecharModalApagar();
 }
@@ -187,4 +194,11 @@ document.addEventListener("keydown", (evento) => {
  * ------------------------------------------------------------------ */
 
 assinar(renderizar);
-iniciarEstado();
+
+const avisoInicial = iniciarEstado();
+
+if (avisoInicial) console.warn(avisoInicial);
+
+if (usandoMemoria) {
+  console.warn("Sem armazenamento local: as tarefas serão perdidas ao fechar a aba.");
+}
