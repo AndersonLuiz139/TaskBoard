@@ -64,6 +64,24 @@ export function separarTextoETags(entrada) {
   return { texto, tags: normalizarTags(tags) };
 }
 
+export function validarEntradaTarefa({ texto, prioridade, prazo } = {}) {
+  const erros = {};
+
+  if (!String(texto ?? "").trim()) {
+    erros.texto = "Escreva o texto da tarefa.";
+  }
+
+  if (!PRIORIDADES.includes(prioridade)) {
+    erros.prioridade = "Escolha a prioridade da tarefa.";
+  }
+
+  if (!normalizarPrazo(prazo)) {
+    erros.prazo = "Informe o prazo da tarefa.";
+  }
+
+  return { valido: Object.keys(erros).length === 0, erros };
+}
+
 export function criarTarefa({
   texto,
   prioridade,

@@ -7,6 +7,8 @@ export const elementos = {
   novaPrioridade: q("#nova-prioridade"),
   novaPrazo: q("#nova-prazo"),
   novaTags: q("#nova-tags"),
+  formNova: q(".nova-tarefa"),
+  erroNova: q(".erro-nova"),
   entradaBusca: q("#entrada-busca"),
   btnLimparBusca: q(".btn-limpar-busca"),
   selectOrdenacao: q("#select-ordenacao"),
@@ -28,6 +30,8 @@ export const elementos = {
   editarPrioridade: q("#editar-prioridade"),
   editarPrazo: q("#editar-prazo"),
   editarTags: q("#editar-tags"),
+  formEditar: q(".form-editar"),
+  erroEditar: q(".erro-editar"),
   btnSalvar: q(".btn-salvar"),
 
   modalConfirmar: q('[data-modal="confirmar"]'),

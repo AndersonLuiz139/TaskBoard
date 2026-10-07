@@ -13,6 +13,7 @@ import {
   separarTextoETags,
   ordenarTarefas,
   contar,
+  validarEntradaTarefa,
   mover,
   proximaOrdem,
   reordenar,
@@ -45,6 +46,44 @@ describe("gerarId", () => {
 
   it("devolve texto", () => {
     assert.equal(typeof gerarId(), "string");
+  });
+});
+
+describe("validarEntradaTarefa", () => {
+  const completa = { texto: "comprar pão", prioridade: "alta", prazo: "2026-03-20" };
+
+  it("aceita os três campos preenchidos", () => {
+    assert.deepEqual(validarEntradaTarefa(completa), { valido: true, erros: {} });
+  });
+
+  it("cobra o texto", () => {
+    const { valido, erros } = validarEntradaTarefa({ ...completa, texto: "   " });
+
+    assert.equal(valido, false);
+    assert.match(erros.texto, /texto da tarefa/i);
+  });
+
+  it("cobra a prioridade, inclusive em branco", () => {
+    assert.equal(validarEntradaTarefa({ ...completa, prioridade: "" }).valido, false);
+    assert.equal(validarEntradaTarefa({ ...completa, prioridade: "urgente" }).valido, false);
+    assert.match(
+      validarEntradaTarefa({ ...completa, prioridade: "" }).erros.prioridade,
+      /prioridade/i,
+    );
+  });
+
+  it("cobra o prazo e recusa data malformada", () => {
+    assert.equal(validarEntradaTarefa({ ...completa, prazo: "" }).valido, false);
+    assert.equal(validarEntradaTarefa({ ...completa, prazo: "20/03/2026" }).valido, false);
+    assert.match(validarEntradaTarefa({ ...completa, prazo: "" }).erros.prazo, /prazo/i);
+  });
+
+  it("acumula os erros de todos os campos vazios", () => {
+    assert.deepEqual(Object.keys(validarEntradaTarefa({}).erros).sort(), [
+      "prazo",
+      "prioridade",
+      "texto",
+    ]);
   });
 });
 

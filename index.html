@@ -33,53 +33,68 @@
         </button>
       </header>
 
-      <section class="nova-tarefa">
-        <div class="nova-tarefa-linha">
-          <label class="rotulo-oculto" for="entrada-tarefa">Nova tarefa</label>
+      <form class="nova-tarefa" novalidate>
+        <div class="campo">
+          <label for="entrada-tarefa">
+            Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
+          </label>
           <input
             id="entrada-tarefa"
             type="text"
-            class="input-tarefa"
+            class="campo-entrada input-tarefa"
             placeholder="Digite sua tarefa..."
+            autocomplete="off"
+            required
+            aria-required="true"
             aria-describedby="dica-tarefa"
           />
-          <button type="button" class="btn-tarefa">Adicionar</button>
+          <p id="dica-tarefa" class="dica">
+            Escreva <code>#casa</code> no texto para criar uma tag.
+          </p>
         </div>
 
-        <p id="dica-tarefa" class="dica">
-          Escreva <code>#casa</code> no texto para criar uma tag.
-        </p>
-
-        <details class="detalhes">
-          <summary>Prioridade, prazo e tags</summary>
-
-          <div class="detalhes-campos">
-            <div class="campo">
-              <label for="nova-prioridade">Prioridade</label>
-              <select id="nova-prioridade" class="campo-entrada">
-                <option value="alta">Alta</option>
-                <option value="media" selected>Média</option>
-                <option value="baixa">Baixa</option>
-              </select>
-            </div>
-
-            <div class="campo">
-              <label for="nova-prazo">Prazo</label>
-              <input id="nova-prazo" class="campo-entrada" type="date" />
-            </div>
-
-            <div class="campo">
-              <label for="nova-tags">Tags</label>
-              <input
-                id="nova-tags"
-                class="campo-entrada"
-                type="text"
-                placeholder="casa, mercado"
-              />
-            </div>
+        <div class="campos-obrigatorios">
+          <div class="campo">
+            <label for="nova-prioridade">
+              Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
+            <select id="nova-prioridade" class="campo-entrada" required aria-required="true">
+              <option value="" disabled selected>Escolha a prioridade</option>
+              <option value="alta">Alta</option>
+              <option value="media">Média</option>
+              <option value="baixa">Baixa</option>
+            </select>
           </div>
-        </details>
-      </section>
+
+          <div class="campo">
+            <label for="nova-prazo">
+              Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
+            <input id="nova-prazo" class="campo-entrada" type="date" required aria-required="true" />
+          </div>
+
+          <div class="campo">
+            <label for="nova-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
+            <input
+              id="nova-tags"
+              class="campo-entrada"
+              type="text"
+              autocomplete="off"
+              placeholder="casa, mercado"
+            />
+          </div>
+        </div>
+
+        <div class="nova-tarefa-rodape">
+          <p class="legenda-obrigatorio">
+            <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
+          </p>
+
+          <button type="submit" class="btn-tarefa">Adicionar tarefa</button>
+        </div>
+
+        <p class="erro erro-nova" role="alert" hidden></p>
+      </form>
 
       <div class="barra-busca">
         <label class="rotulo-oculto" for="entrada-busca">Buscar tarefas</label>
@@ -167,38 +182,60 @@
       tabindex="-1"
     >
       <h2 id="titulo-editar">Editar tarefa</h2>
-      <p class="modal-texto">Altere o texto da sua tarefa.</p>
+      <p class="modal-texto">Altere o texto, a prioridade, o prazo ou as tags.</p>
 
-      <div class="campo">
-        <label for="editar-texto">Tarefa</label>
-        <input id="editar-texto" type="text" class="input-editar" />
-      </div>
-
-      <div class="detalhes-campos">
+      <form class="form-editar" novalidate>
         <div class="campo">
-          <label for="editar-prioridade">Prioridade</label>
-          <select id="editar-prioridade" class="campo-entrada">
-            <option value="alta">Alta</option>
-            <option value="media">Média</option>
-            <option value="baixa">Baixa</option>
-          </select>
+          <label for="editar-texto">
+            Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="editar-texto"
+            type="text"
+            class="campo-entrada input-editar"
+            autocomplete="off"
+            required
+            aria-required="true"
+          />
         </div>
 
-        <div class="campo">
-          <label for="editar-prazo">Prazo</label>
-          <input id="editar-prazo" class="campo-entrada" type="date" />
+        <div class="campos-obrigatorios">
+          <div class="campo">
+            <label for="editar-prioridade">
+              Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
+            <select id="editar-prioridade" class="campo-entrada" required aria-required="true">
+              <option value="" disabled>Escolha a prioridade</option>
+              <option value="alta">Alta</option>
+              <option value="media">Média</option>
+              <option value="baixa">Baixa</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="editar-prazo">
+              Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
+            <input id="editar-prazo" class="campo-entrada" type="date" required aria-required="true" />
+          </div>
+
+          <div class="campo">
+            <label for="editar-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
+            <input id="editar-tags" class="campo-entrada" type="text" autocomplete="off" />
+          </div>
         </div>
 
-        <div class="campo">
-          <label for="editar-tags">Tags</label>
-          <input id="editar-tags" class="campo-entrada" type="text" />
-        </div>
-      </div>
+        <p class="erro erro-editar" role="alert" hidden></p>
 
-      <div class="modal-acoes">
-        <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
-        <button type="button" class="btn-salvar">Salvar</button>
-      </div>
+        <div class="modal-acoes">
+          <p class="legenda-obrigatorio">
+            <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
+          </p>
+
+          <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
+          <button type="submit" class="btn-salvar">Salvar</button>
+        </div>
+      </form>
     </div>
   </div>
 

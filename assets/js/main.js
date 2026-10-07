@@ -21,6 +21,7 @@ import {
   criarTarefa,
   editarTarefa,
   separarTextoETags,
+  validarEntradaTarefa,
   mover,
   proximaOrdem,
   reordenar,
@@ -45,10 +46,50 @@ function limparInput() {
   elementos.inputTarefa.focus();
 }
 
+function mostrarErro(elemento, mensagem) {
+  elemento.textContent = mensagem;
+  elemento.hidden = false;
+}
+
+function limparErro(elemento) {
+  elemento.textContent = "";
+  elemento.hidden = true;
+}
+
+function validarCampos(valores, alvoErro, campos) {
+  const { valido, erros } = validarEntradaTarefa(valores);
+
+  if (valido) {
+    limparErro(alvoErro);
+    return true;
+  }
+
+  const [primeiro] = Object.keys(erros);
+
+  mostrarErro(alvoErro, erros[primeiro]);
+  campos[primeiro]?.focus();
+
+  return false;
+}
+
 function adicionarTarefa(entrada) {
   const { texto, tags } = separarTextoETags(entrada);
 
-  if (!texto) return;
+  const preenchido = validarCampos(
+    {
+      texto,
+      prioridade: elementos.novaPrioridade.value,
+      prazo: elementos.novaPrazo.value,
+    },
+    elementos.erroNova,
+    {
+      texto: elementos.inputTarefa,
+      prioridade: elementos.novaPrioridade,
+      prazo: elementos.novaPrazo,
+    },
+  );
+
+  if (!preenchido) return;
 
   const tagsDoCampo = elementos.novaTags.value;
 
@@ -64,17 +105,19 @@ function adicionarTarefa(entrada) {
 
   elementos.novaTags.value = "";
   elementos.novaPrazo.value = "";
+  elementos.novaPrioridade.value = "";
   limparInput();
 }
 
-elementos.btnTarefa.addEventListener("click", () => {
+elementos.formNova.addEventListener("submit", (evento) => {
+  evento.preventDefault();
   adicionarTarefa(elementos.inputTarefa.value);
 });
 
-elementos.inputTarefa.addEventListener("keypress", (evento) => {
-  if (evento.key === "Enter") {
-    adicionarTarefa(elementos.inputTarefa.value);
-  }
+elementos.inputTarefa.addEventListener("input", () => limparErro(elementos.erroNova));
+
+[elementos.novaPrioridade, elementos.novaPrazo].forEach((campo) => {
+  campo.addEventListener("change", () => limparErro(elementos.erroNova));
 });
 
 listaTarefas.addEventListener("click", (evento) => {
@@ -316,6 +359,7 @@ function abrirModalEdicao(id) {
   estado.tarefaEmEdicaoId = id;
   elementos.inputEditar.value = tarefa.texto;
   elementos.editarPrioridade.value = tarefa.prioridade;
+  limparErro(elementos.erroEditar);
   elementos.editarPrazo.value = tarefa.prazo ?? "";
   elementos.editarTags.value = tarefa.tags.join(", ");
 
@@ -332,10 +376,21 @@ function abrirModalEdicao(id) {
 function salvarEdicao() {
   const textoEditado = elementos.inputEditar.value.trim();
 
-  if (!textoEditado) {
-    mostrarToast("A tarefa não pode ficar vazia.", { tipo: "erro" });
-    return;
-  }
+  const preenchido = validarCampos(
+    {
+      texto: textoEditado,
+      prioridade: elementos.editarPrioridade.value,
+      prazo: elementos.editarPrazo.value,
+    },
+    elementos.erroEditar,
+    {
+      texto: elementos.inputEditar,
+      prioridade: elementos.editarPrioridade,
+      prazo: elementos.editarPrazo,
+    },
+  );
+
+  if (!preenchido) return;
 
   const id = estado.tarefaEmEdicaoId;
 
@@ -352,12 +407,15 @@ function salvarEdicao() {
   focarAcaoDaTarefa(id, ".btn-editar");
 }
 
-elementos.btnSalvar.addEventListener("click", salvarEdicao);
+elementos.formEditar.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+  salvarEdicao();
+});
 
-elementos.inputEditar.addEventListener("keypress", (evento) => {
-  if (evento.key === "Enter") {
-    salvarEdicao();
-  }
+elementos.inputEditar.addEventListener("input", () => limparErro(elementos.erroEditar));
+
+[elementos.editarPrioridade, elementos.editarPrazo].forEach((campo) => {
+  campo.addEventListener("change", () => limparErro(elementos.erroEditar));
 });
 
 /* ------------------------------------------------------------------ *
