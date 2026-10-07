@@ -55,7 +55,52 @@ function criarMeta(tarefa, hoje) {
   return meta;
 }
 
-export function criarElementoTarefa(tarefa, hoje) {
+function criarAlca(tarefa, manual) {
+  const alca = document.createElement("button");
+
+  alca.type = "button";
+  alca.className = "alca";
+  alca.textContent = "⠿";
+
+  if (manual) {
+    alca.draggable = true;
+    alca.setAttribute(
+      "aria-label",
+      `Reordenar: ${tarefa.texto}. Use Alt com as setas para cima ou para baixo.`,
+    );
+  } else {
+    alca.disabled = true;
+    alca.tabIndex = -1;
+    alca.setAttribute("aria-hidden", "true");
+    alca.title = "Reordenar só funciona na ordem manual, sem busca";
+  }
+
+  return alca;
+}
+
+function criarTexto(tarefa) {
+  if (estado.edicaoInlineId === tarefa.id) {
+    const entrada = document.createElement("input");
+
+    entrada.type = "text";
+    entrada.className = "entrada-inline";
+    entrada.value = tarefa.texto;
+    entrada.dataset.inline = "true";
+    entrada.setAttribute("aria-label", `Editar texto: ${tarefa.texto}`);
+
+    return entrada;
+  }
+
+  const texto = document.createElement("span");
+
+  texto.className = "tarefa-texto";
+  texto.textContent = tarefa.texto;
+  texto.title = "Duplo clique para editar";
+
+  return texto;
+}
+
+export function criarElementoTarefa(tarefa, hoje, manual) {
   const li = document.createElement("li");
 
   li.className = `tarefa prioridade-${tarefa.prioridade}`;
@@ -79,12 +124,8 @@ export function criarElementoTarefa(tarefa, hoje) {
   const corpo = document.createElement("div");
   corpo.className = "tarefa-corpo";
 
-  const texto = document.createElement("span");
-  texto.className = "tarefa-texto";
-  texto.textContent = tarefa.texto;
-
-  corpo.append(texto, criarMeta(tarefa, hoje));
-  conteudo.append(check, corpo);
+  corpo.append(criarTexto(tarefa), criarMeta(tarefa, hoje));
+  conteudo.append(criarAlca(tarefa, manual), check, corpo);
 
   const acoes = document.createElement("div");
   acoes.className = "tarefa-acoes";
@@ -162,6 +203,7 @@ function atualizarResumo(numeros) {
 
 export function renderizar() {
   const hoje = hojeISO();
+  const manual = estado.ordenacao === "manual" && estado.busca.trim() === "";
 
   elementos.listaTarefas.innerHTML = "";
 
@@ -175,8 +217,10 @@ export function renderizar() {
   );
 
   visiveis.forEach((tarefa) => {
-    elementos.listaTarefas.appendChild(criarElementoTarefa(tarefa, hoje));
+    elementos.listaTarefas.appendChild(criarElementoTarefa(tarefa, hoje, manual));
   });
+
+  elementos.listaTarefas.classList.toggle("reordenavel", manual);
 
   const numeros = contar(estado.tarefas, hoje);
 
@@ -190,4 +234,11 @@ export function renderizar() {
   elementos.selectOrdenacao.value = estado.ordenacao;
   elementos.btnLimparBusca.hidden = estado.busca.trim() === "";
   elementos.btnLimpar.disabled = numeros.concluidas === 0;
+
+  const entradaInline = elementos.listaTarefas.querySelector("[data-inline]");
+
+  if (entradaInline && document.activeElement !== entradaInline) {
+    entradaInline.focus();
+    entradaInline.setSelectionRange(entradaInline.value.length, entradaInline.value.length);
+  }
 }

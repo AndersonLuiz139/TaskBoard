@@ -13,6 +13,9 @@ import {
   separarTextoETags,
   ordenarTarefas,
   contar,
+  mover,
+  proximaOrdem,
+  reordenar,
   filtrarTarefas,
   gerarId,
   limparConcluidas,
@@ -27,6 +30,7 @@ const tarefa = (id, texto, concluida = false, extra = {}) => ({
   prioridade: "media",
   prazo: null,
   tags: [],
+  ordem: 0,
   ...extra,
 });
 
@@ -156,14 +160,14 @@ describe("filtrarTarefas", () => {
 
 describe("ordenarTarefas", () => {
   const lista = [
-    tarefa("a", "x", false, { prioridade: "baixa", prazo: "2026-05-01", criadaEm: "2026-01-03T00:00:00.000Z" }),
-    tarefa("b", "y", false, { prioridade: "alta", prazo: null, criadaEm: "2026-01-01T00:00:00.000Z" }),
-    tarefa("c", "z", false, { prioridade: "media", prazo: "2026-04-01", criadaEm: "2026-01-02T00:00:00.000Z" }),
+    tarefa("a", "x", false, { ordem: 2, prioridade: "baixa", prazo: "2026-05-01", criadaEm: "2026-01-03T00:00:00.000Z" }),
+    tarefa("b", "y", false, { ordem: 0, prioridade: "alta", prazo: null, criadaEm: "2026-01-01T00:00:00.000Z" }),
+    tarefa("c", "z", false, { ordem: 1, prioridade: "media", prazo: "2026-04-01", criadaEm: "2026-01-02T00:00:00.000Z" }),
   ];
   const ids = (ordem) => ordenarTarefas(lista, ordem).map((t) => t.id);
 
-  it("mantém a ordem da lista no modo manual", () => {
-    assert.deepEqual(ids("manual"), ["a", "b", "c"]);
+  it("ordena pelo campo ordem no modo manual", () => {
+    assert.deepEqual(ids("manual"), ["b", "c", "a"]);
   });
 
   it("ordena por prioridade", () => {
@@ -185,6 +189,59 @@ describe("ordenarTarefas", () => {
     ordenarTarefas(lista, "prioridade");
 
     assert.deepEqual(lista, copia);
+  });
+});
+
+describe("reordenar e mover", () => {
+  const lista = [
+    tarefa("a", "primeira", false, { ordem: 0 }),
+    tarefa("b", "segunda", false, { ordem: 1 }),
+    tarefa("c", "terceira", false, { ordem: 2 }),
+  ];
+  const ids = (resultado) => ordenarTarefas(resultado, "manual").map((t) => t.id);
+
+  it("solta antes do destino", () => {
+    assert.deepEqual(ids(reordenar(lista, "c", "a", "antes")), ["c", "a", "b"]);
+  });
+
+  it("solta depois do destino", () => {
+    assert.deepEqual(ids(reordenar(lista, "a", "c", "depois")), ["b", "c", "a"]);
+  });
+
+  it("renumera a ordem sem deixar buracos", () => {
+    assert.deepEqual(
+      reordenar(lista, "c", "a", "antes").map((t) => t.ordem).sort(),
+      [0, 1, 2],
+    );
+  });
+
+  it("ignora movimento sobre si mesma ou com id inexistente", () => {
+    assert.equal(reordenar(lista, "a", "a"), lista);
+    assert.equal(reordenar(lista, "a", "zzz"), lista);
+    assert.equal(reordenar(lista, null, "a"), lista);
+  });
+
+  it("move pelo teclado respeitando os limites", () => {
+    assert.deepEqual(ids(mover(lista, "b", -1)), ["b", "a", "c"]);
+    assert.deepEqual(ids(mover(lista, "b", 1)), ["a", "c", "b"]);
+    assert.equal(mover(lista, "a", -1), lista);
+    assert.equal(mover(lista, "c", 1), lista);
+  });
+
+  it("não altera a lista recebida", () => {
+    const copia = JSON.parse(JSON.stringify(lista));
+
+    reordenar(lista, "c", "a");
+    mover(lista, "a", 1);
+
+    assert.deepEqual(lista, copia);
+  });
+});
+
+describe("proximaOrdem", () => {
+  it("coloca a nova tarefa no fim", () => {
+    assert.equal(proximaOrdem([tarefa("a", "x", false, { ordem: 4 })]), 5);
+    assert.equal(proximaOrdem([]), 0);
   });
 });
 

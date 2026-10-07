@@ -64,7 +64,14 @@ export function separarTextoETags(entrada) {
   return { texto, tags: normalizarTags(tags) };
 }
 
-export function criarTarefa({ texto, prioridade, prazo, tags = [], agora = new Date() }) {
+export function criarTarefa({
+  texto,
+  prioridade,
+  prazo,
+  tags = [],
+  ordem = 0,
+  agora = new Date(),
+}) {
   return {
     id: gerarId(),
     texto: texto.trim(),
@@ -73,7 +80,49 @@ export function criarTarefa({ texto, prioridade, prazo, tags = [], agora = new D
     prioridade: normalizarPrioridade(prioridade),
     prazo: normalizarPrazo(prazo),
     tags: normalizarTags(tags),
+    ordem,
   };
+}
+
+export function proximaOrdem(tarefas) {
+  return tarefas.reduce((maior, tarefa) => Math.max(maior, tarefa.ordem ?? 0), -1) + 1;
+}
+
+function renumerar(tarefas) {
+  return tarefas.map((tarefa, indice) => ({ ...tarefa, ordem: indice }));
+}
+
+export function reordenar(tarefas, idArrastado, idDestino, posicao = "antes") {
+  if (!idArrastado || !idDestino || idArrastado === idDestino) return tarefas;
+
+  const ordenadas = ordenarTarefas(tarefas, "manual");
+  const origem = ordenadas.findIndex((tarefa) => tarefa.id === idArrastado);
+  const destinoOriginal = ordenadas.findIndex((tarefa) => tarefa.id === idDestino);
+
+  if (origem === -1 || destinoOriginal === -1) return tarefas;
+
+  const [movida] = ordenadas.splice(origem, 1);
+  const destino = ordenadas.findIndex((tarefa) => tarefa.id === idDestino);
+
+  ordenadas.splice(posicao === "depois" ? destino + 1 : destino, 0, movida);
+
+  return renumerar(ordenadas);
+}
+
+export function mover(tarefas, id, passo) {
+  const ordenadas = ordenarTarefas(tarefas, "manual");
+  const atual = ordenadas.findIndex((tarefa) => tarefa.id === id);
+
+  if (atual === -1) return tarefas;
+
+  const novo = atual + passo;
+
+  if (novo < 0 || novo >= ordenadas.length) return tarefas;
+
+  const [movida] = ordenadas.splice(atual, 1);
+  ordenadas.splice(novo, 0, movida);
+
+  return renumerar(ordenadas);
 }
 
 export function estaAtrasada(tarefa, hoje = hojeISO()) {
@@ -108,20 +157,22 @@ function compararPrazo(a, b) {
 
 export function ordenarTarefas(tarefas, ordenacao) {
   const copia = [...tarefas];
+  const porOrdem = (a, b) => (a.ordem ?? 0) - (b.ordem ?? 0);
 
   switch (ordenacao) {
     case "prioridade":
       return copia.sort(
-        (a, b) => ORDEM_PRIORIDADE[a.prioridade] - ORDEM_PRIORIDADE[b.prioridade],
+        (a, b) =>
+          ORDEM_PRIORIDADE[a.prioridade] - ORDEM_PRIORIDADE[b.prioridade] || porOrdem(a, b),
       );
     case "prazo":
-      return copia.sort(compararPrazo);
+      return copia.sort((a, b) => compararPrazo(a, b) || porOrdem(a, b));
     case "recentes":
       return copia.sort((a, b) => String(b.criadaEm).localeCompare(String(a.criadaEm)));
     case "antigas":
       return copia.sort((a, b) => String(a.criadaEm).localeCompare(String(b.criadaEm)));
     default:
-      return copia;
+      return copia.sort(porOrdem);
   }
 }
 

@@ -15,6 +15,8 @@ export const estado = {
   busca: "",
   ordenacao: ORDENACAO_PADRAO,
   tarefaEmEdicaoId: null,
+  edicaoInlineId: null,
+  idArrastado: null,
   tarefaParaApagarId: null,
 };
 

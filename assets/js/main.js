@@ -18,6 +18,9 @@ import {
   criarTarefa,
   editarTarefa,
   separarTextoETags,
+  mover,
+  proximaOrdem,
+  reordenar,
   limparConcluidas,
   removerTarefa,
 } from "./tarefas.js";
@@ -51,6 +54,7 @@ function adicionarTarefa(entrada) {
     prioridade: elementos.novaPrioridade.value,
     prazo: elementos.novaPrazo.value,
     tags: [...tags, ...(tagsDoCampo ? tagsDoCampo.split(/[,\s]+/) : [])],
+    ordem: proximaOrdem(estado.tarefas),
   });
 
   aplicar((tarefas) => [...tarefas, nova]);
@@ -156,6 +160,140 @@ elementos.btnLimpar.addEventListener("click", () => {
     },
   });
 });
+
+/* ------------------------------------------------------------------ *
+ * Edição rápida no próprio item
+ * ------------------------------------------------------------------ */
+
+listaTarefas.addEventListener("dblclick", (evento) => {
+  const id = evento.target.closest(".tarefa")?.dataset.id;
+
+  if (id && evento.target.classList.contains("tarefa-texto")) {
+    definirUI({ edicaoInlineId: id });
+  }
+});
+
+function salvarEdicaoInline(valor) {
+  const id = estado.edicaoInlineId;
+  const texto = valor.trim();
+
+  if (!id) return;
+
+  if (!texto) {
+    definirUI({ edicaoInlineId: null });
+    mostrarToast("A tarefa não pode ficar vazia. O texto anterior foi mantido.", {
+      tipo: "erro",
+    });
+    return;
+  }
+
+  estado.edicaoInlineId = null;
+  aplicar((tarefas) => editarTarefa(tarefas, id, { texto }));
+}
+
+listaTarefas.addEventListener("focusout", (evento) => {
+  if (evento.target.dataset.inline === "true" && estado.edicaoInlineId) {
+    salvarEdicaoInline(evento.target.value);
+  }
+});
+
+/* ------------------------------------------------------------------ *
+ * Reordenar
+ * ------------------------------------------------------------------ */
+
+listaTarefas.addEventListener("keydown", (evento) => {
+  const alvo = evento.target;
+
+  if (alvo.dataset.inline === "true") {
+    if (evento.key === "Enter") {
+      evento.preventDefault();
+      salvarEdicaoInline(alvo.value);
+    }
+
+    if (evento.key === "Escape") {
+      evento.preventDefault();
+      definirUI({ edicaoInlineId: null });
+    }
+
+    return;
+  }
+
+  const alca = alvo.closest(".alca");
+
+  if (!alca || !evento.altKey) return;
+  if (evento.key !== "ArrowUp" && evento.key !== "ArrowDown") return;
+
+  evento.preventDefault();
+
+  const id = alca.closest(".tarefa").dataset.id;
+
+  aplicar((tarefas) => mover(tarefas, id, evento.key === "ArrowUp" ? -1 : 1));
+  focarAcaoDaTarefa(id, ".alca");
+});
+
+function limparIndicadores() {
+  listaTarefas
+    .querySelectorAll(".alvo-antes, .alvo-depois")
+    .forEach((li) => li.classList.remove("alvo-antes", "alvo-depois"));
+}
+
+function finalizarArraste() {
+  estado.idArrastado = null;
+  limparIndicadores();
+  listaTarefas.querySelectorAll(".arrastando").forEach((li) => li.classList.remove("arrastando"));
+}
+
+listaTarefas.addEventListener("dragstart", (evento) => {
+  const alca = evento.target.closest(".alca");
+
+  if (!alca || alca.disabled) return;
+
+  const li = alca.closest(".tarefa");
+
+  estado.idArrastado = li.dataset.id;
+
+  evento.dataTransfer.effectAllowed = "move";
+  evento.dataTransfer.setData("text/plain", li.dataset.id);
+  evento.dataTransfer.setDragImage(li, 24, 24);
+
+  li.classList.add("arrastando");
+});
+
+listaTarefas.addEventListener("dragover", (evento) => {
+  if (!estado.idArrastado) return;
+
+  const li = evento.target.closest(".tarefa");
+
+  if (!li || li.dataset.id === estado.idArrastado) return;
+
+  evento.preventDefault();
+  evento.dataTransfer.dropEffect = "move";
+
+  const area = li.getBoundingClientRect();
+  const depois = evento.clientY > area.top + area.height / 2;
+
+  limparIndicadores();
+  li.classList.add(depois ? "alvo-depois" : "alvo-antes");
+});
+
+listaTarefas.addEventListener("drop", (evento) => {
+  if (!estado.idArrastado) return;
+
+  const li = evento.target.closest(".tarefa");
+
+  if (!li) return;
+
+  evento.preventDefault();
+
+  const posicao = li.classList.contains("alvo-depois") ? "depois" : "antes";
+  const arrastado = estado.idArrastado;
+  const destino = li.dataset.id;
+
+  finalizarArraste();
+  aplicar((tarefas) => reordenar(tarefas, arrastado, destino, posicao));
+});
+
+listaTarefas.addEventListener("dragend", finalizarArraste);
 
 /* ------------------------------------------------------------------ *
  * Modal de edição

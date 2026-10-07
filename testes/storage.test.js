@@ -86,7 +86,7 @@ describe("carregarTarefas", () => {
     assert.equal(tarefas[1].concluida, true);
     assert.match(aviso, /migradas/i);
     assert.equal(deposito.getItem(CHAVE_LEGADA), null);
-    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 3);
+    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 4);
   });
 
   it("regenera ids repetidos", () => {
@@ -121,10 +121,34 @@ describe("carregarTarefas", () => {
   it("não avisa nada quando o formato já está na versão atual", () => {
     const deposito = comConteudo(
       CHAVE_TAREFAS,
-      JSON.stringify({ versao: 3, tarefas: [{ id: "a", texto: "comprar pão" }] }),
+      JSON.stringify({
+        versao: 4,
+        tarefas: [{ id: "a", texto: "comprar pão", ordem: 0 }],
+      }),
     );
 
     assert.equal(carregarTarefas(deposito).aviso, null);
+  });
+
+  it("numera a ordem pela posição quando ela não existe", () => {
+    const deposito = comConteudo(
+      CHAVE_TAREFAS,
+      JSON.stringify({
+        versao: 3,
+        tarefas: [
+          { id: "a", texto: "primeira" },
+          { id: "b", texto: "segunda" },
+          { id: "c", texto: "terceira" },
+        ],
+      }),
+    );
+
+    const { tarefas } = carregarTarefas(deposito);
+
+    assert.deepEqual(
+      tarefas.map((t) => t.ordem),
+      [0, 1, 2],
+    );
   });
 
   it("migra a v2 preenchendo os campos novos com padrões", () => {
@@ -142,8 +166,8 @@ describe("carregarTarefas", () => {
     assert.equal(tarefas[0].prazo, null);
     assert.deepEqual(tarefas[0].tags, []);
     assert.ok(tarefas[0].criadaEm);
-    assert.match(aviso, /v2 para v3/);
-    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 3);
+    assert.match(aviso, /v2 para v4/);
+    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 4);
   });
 });
 
@@ -155,7 +179,7 @@ describe("salvarTarefas", () => {
 
     const gravado = JSON.parse(deposito.getItem(CHAVE_TAREFAS));
 
-    assert.equal(gravado.versao, 3);
+    assert.equal(gravado.versao, 4);
     assert.equal(gravado.tarefas.length, 1);
   });
 
@@ -189,6 +213,7 @@ describe("gravar e ler de volta", () => {
       prioridade: "alta",
       prazo: "2026-03-20",
       tags: ["casa"],
+      ordem: 0,
     };
 
     salvarTarefas([original], deposito);

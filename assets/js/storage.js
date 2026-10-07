@@ -38,7 +38,7 @@ function detectarDeposito() {
 export const deposito = detectarDeposito();
 export const usandoMemoria = deposito !== globalThis.localStorage;
 
-export function normalizarTarefa(bruta) {
+export function normalizarTarefa(bruta, indice = 0) {
   if (!bruta || typeof bruta !== "object") return null;
 
   const texto = typeof bruta.texto === "string" ? bruta.texto.trim() : "";
@@ -58,6 +58,7 @@ export function normalizarTarefa(bruta) {
     prioridade: normalizarPrioridade(bruta.prioridade),
     prazo: normalizarPrazo(bruta.prazo),
     tags: normalizarTags(bruta.tags ?? []),
+    ordem: Number.isFinite(bruta.ordem) ? Number(bruta.ordem) : indice,
   };
 }
 
@@ -71,8 +72,8 @@ function migrar(dados) {
   const tarefas = [];
   let descartadas = 0;
 
-  lista.forEach((bruta) => {
-    const tarefa = normalizarTarefa(bruta);
+  lista.forEach((bruta, indice) => {
+    const tarefa = normalizarTarefa(bruta, indice);
 
     if (!tarefa) {
       descartadas += 1;

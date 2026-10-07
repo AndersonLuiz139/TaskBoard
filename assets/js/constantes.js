@@ -2,7 +2,7 @@
 export const CHAVE_TAREFAS = "taskboard:tarefas";
 export const CHAVE_LEGADA = "tarefas";
 export const CHAVE_BACKUP = "taskboard:tarefas-corrompidas";
-export const VERSAO_SCHEMA = 3;
+export const VERSAO_SCHEMA = 4;
 export const FILTROS = ["todas", "pendentes", "concluidas", "atrasadas"];
 export const FILTRO_PADRAO = "todas";
 export const ORDENACOES = ["manual", "prioridade", "prazo", "recentes", "antigas"];
