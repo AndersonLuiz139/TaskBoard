@@ -5,7 +5,12 @@ import {
   CHAVE_TAREFAS,
   VERSAO_SCHEMA,
 } from "./constantes.js";
-import { gerarId } from "./tarefas.js";
+import {
+  gerarId,
+  normalizarPrazo,
+  normalizarPrioridade,
+  normalizarTags,
+} from "./tarefas.js";
 
 export function criarDepositoMemoria() {
   const mapa = new Map();
@@ -40,10 +45,19 @@ export function normalizarTarefa(bruta) {
 
   if (!texto) return null;
 
+  const criadaEm =
+    typeof bruta.criadaEm === "string" && !Number.isNaN(Date.parse(bruta.criadaEm))
+      ? bruta.criadaEm
+      : new Date().toISOString();
+
   return {
     id: typeof bruta.id === "string" && bruta.id.trim() ? bruta.id : gerarId(),
     texto,
     concluida: Boolean(bruta.concluida),
+    criadaEm,
+    prioridade: normalizarPrioridade(bruta.prioridade),
+    prazo: normalizarPrazo(bruta.prazo),
+    tags: normalizarTags(bruta.tags ?? []),
   };
 }
 

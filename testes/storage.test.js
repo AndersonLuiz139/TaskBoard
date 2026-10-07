@@ -34,6 +34,20 @@ describe("normalizarTarefa", () => {
     assert.equal(tarefa.concluida, true);
   });
 
+  it("recusa prioridade e prazo inválidos vindos do disco", () => {
+    const tarefa = normalizarTarefa({
+      id: "a",
+      texto: "x",
+      prioridade: "urgentíssima",
+      prazo: "ontem",
+      tags: "#Casa, casa",
+    });
+
+    assert.equal(tarefa.prioridade, "media");
+    assert.equal(tarefa.prazo, null);
+    assert.deepEqual(tarefa.tags, ["casa"]);
+  });
+
   it("regenera id que não seja texto", () => {
     const tarefa = normalizarTarefa({ id: 1742212345678, texto: "x" });
 
@@ -72,7 +86,7 @@ describe("carregarTarefas", () => {
     assert.equal(tarefas[1].concluida, true);
     assert.match(aviso, /migradas/i);
     assert.equal(deposito.getItem(CHAVE_LEGADA), null);
-    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 2);
+    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 3);
   });
 
   it("regenera ids repetidos", () => {
@@ -107,10 +121,29 @@ describe("carregarTarefas", () => {
   it("não avisa nada quando o formato já está na versão atual", () => {
     const deposito = comConteudo(
       CHAVE_TAREFAS,
-      JSON.stringify({ versao: 2, tarefas: [{ id: "a", texto: "comprar pão" }] }),
+      JSON.stringify({ versao: 3, tarefas: [{ id: "a", texto: "comprar pão" }] }),
     );
 
     assert.equal(carregarTarefas(deposito).aviso, null);
+  });
+
+  it("migra a v2 preenchendo os campos novos com padrões", () => {
+    const deposito = comConteudo(
+      CHAVE_TAREFAS,
+      JSON.stringify({
+        versao: 2,
+        tarefas: [{ id: "a", texto: "comprar pão", concluida: false }],
+      }),
+    );
+
+    const { tarefas, aviso } = carregarTarefas(deposito);
+
+    assert.equal(tarefas[0].prioridade, "media");
+    assert.equal(tarefas[0].prazo, null);
+    assert.deepEqual(tarefas[0].tags, []);
+    assert.ok(tarefas[0].criadaEm);
+    assert.match(aviso, /v2 para v3/);
+    assert.equal(JSON.parse(deposito.getItem(CHAVE_TAREFAS)).versao, 3);
   });
 });
 
@@ -122,7 +155,7 @@ describe("salvarTarefas", () => {
 
     const gravado = JSON.parse(deposito.getItem(CHAVE_TAREFAS));
 
-    assert.equal(gravado.versao, 2);
+    assert.equal(gravado.versao, 3);
     assert.equal(gravado.tarefas.length, 1);
   });
 
@@ -148,11 +181,21 @@ describe("gravar e ler de volta", () => {
   it("preserva os campos na ida e volta", () => {
     const deposito = criarDepositoMemoria();
 
-    salvarTarefas([{ id: "a", texto: "comprar pão", concluida: true }], deposito);
+    const original = {
+      id: "a",
+      texto: "comprar pão",
+      concluida: true,
+      criadaEm: "2026-03-01T10:00:00.000Z",
+      prioridade: "alta",
+      prazo: "2026-03-20",
+      tags: ["casa"],
+    };
+
+    salvarTarefas([original], deposito);
 
     const { tarefas, aviso } = carregarTarefas(deposito);
 
     assert.equal(aviso, null);
-    assert.deepEqual(tarefas, [{ id: "a", texto: "comprar pão", concluida: true }]);
+    assert.deepEqual(tarefas, [original]);
   });
 });

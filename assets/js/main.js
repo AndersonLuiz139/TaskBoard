@@ -16,7 +16,8 @@ import { mostrarToast } from "./toast.js";
 import {
   alternarConclusao,
   criarTarefa,
-  editarTexto,
+  editarTarefa,
+  separarTextoETags,
   limparConcluidas,
   removerTarefa,
 } from "./tarefas.js";
@@ -38,13 +39,24 @@ function limparInput() {
   elementos.inputTarefa.focus();
 }
 
-function adicionarTarefa(texto) {
-  const textoLimpo = texto.trim();
+function adicionarTarefa(entrada) {
+  const { texto, tags } = separarTextoETags(entrada);
 
-  if (!textoLimpo) return;
+  if (!texto) return;
 
-  aplicar((tarefas) => [...tarefas, criarTarefa(textoLimpo)]);
+  const tagsDoCampo = elementos.novaTags.value;
 
+  const nova = criarTarefa({
+    texto,
+    prioridade: elementos.novaPrioridade.value,
+    prazo: elementos.novaPrazo.value,
+    tags: [...tags, ...(tagsDoCampo ? tagsDoCampo.split(/[,\s]+/) : [])],
+  });
+
+  aplicar((tarefas) => [...tarefas, nova]);
+
+  elementos.novaTags.value = "";
+  elementos.novaPrazo.value = "";
   limparInput();
 }
 
@@ -150,6 +162,9 @@ function abrirModalEdicao(id) {
 
   estado.tarefaEmEdicaoId = id;
   elementos.inputEditar.value = tarefa.texto;
+  elementos.editarPrioridade.value = tarefa.prioridade;
+  elementos.editarPrazo.value = tarefa.prazo ?? "";
+  elementos.editarTags.value = tarefa.tags.join(", ");
 
   abrirModal(elementos.modalEditar, {
     focar: elementos.inputEditar,
@@ -171,7 +186,14 @@ function salvarEdicao() {
 
   const id = estado.tarefaEmEdicaoId;
 
-  aplicar((tarefas) => editarTexto(tarefas, id, textoEditado));
+  aplicar((tarefas) =>
+    editarTarefa(tarefas, id, {
+      texto: textoEditado,
+      prioridade: elementos.editarPrioridade.value,
+      prazo: elementos.editarPrazo.value,
+      tags: elementos.editarTags.value,
+    }),
+  );
 
   fecharModal();
   focarAcaoDaTarefa(id, ".btn-editar");

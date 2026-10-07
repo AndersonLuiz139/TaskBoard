@@ -104,10 +104,13 @@ body {
 }
 
 .nova-tarefa {
+  margin-bottom: 22px;
+}
+
+.nova-tarefa-linha {
   display: grid;
   grid-template-columns: 1fr 160px;
   gap: 12px;
-  margin-bottom: 22px;
 }
 
 .input-tarefa {
@@ -209,9 +212,10 @@ body {
 
 .tarefa-conteudo {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   flex: 1;
+  min-width: 0;
 }
 
 .tarefa-texto {
@@ -249,6 +253,8 @@ body {
 .check-tarefa {
   width: 20px;
   height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
   cursor: pointer;
 }
 
@@ -410,6 +416,160 @@ body {
 }
 
 
+/* Campos de detalhe e etiquetas */
+
+.dica {
+  margin-top: 6px;
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+
+.dica code {
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: var(--gray-100);
+  font-family: ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+
+.detalhes {
+  margin-top: 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.detalhes > summary {
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--gray-600);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detalhes[open] > summary {
+  border-bottom: 1px solid var(--gray-200);
+  border-radius: 12px 12px 0 0;
+}
+
+.detalhes-campos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 14px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.campo > label {
+  color: var(--gray-600);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.campo-entrada {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--gray-800);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campo-entrada:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+  outline: none;
+}
+
+.tarefa-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tarefa-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.etiqueta-alta {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.etiqueta-media {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.etiqueta-baixa {
+  background: #ede9fe;
+  color: var(--primary);
+}
+
+.etiqueta-atrasada {
+  border-color: #b91c1c;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.etiqueta-tag {
+  border-color: var(--gray-200);
+  background: transparent;
+}
+
+.etiqueta-criada {
+  background: transparent;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.prioridade-alta {
+  border-left: 4px solid #b91c1c;
+}
+
+.prioridade-media {
+  border-left: 4px solid #b45309;
+}
+
+.prioridade-baixa {
+  border-left: 4px solid var(--primary);
+}
+
+.tarefa.atrasada {
+  background: #fef2f2;
+}
+
 /* Avisos */
 
 .toasts {
@@ -501,6 +661,10 @@ body {
 }
 
 @media (max-width: 700px) {
+  .detalhes-campos {
+    grid-template-columns: 1fr;
+  }
+
   .toasts {
     left: 12px;
     right: 12px;
@@ -508,7 +672,7 @@ body {
     max-width: none;
   }
 
-  .nova-tarefa {
+  .nova-tarefa-linha {
     grid-template-columns: 1fr;
   }
 

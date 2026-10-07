@@ -21,14 +21,51 @@
       </header>
 
       <section class="nova-tarefa">
-        <label class="rotulo-oculto" for="entrada-tarefa">Nova tarefa</label>
-        <input
-          id="entrada-tarefa"
-          type="text"
-          class="input-tarefa"
-          placeholder="Digite sua tarefa..."
-        />
-        <button type="button" class="btn-tarefa">Adicionar</button>
+        <div class="nova-tarefa-linha">
+          <label class="rotulo-oculto" for="entrada-tarefa">Nova tarefa</label>
+          <input
+            id="entrada-tarefa"
+            type="text"
+            class="input-tarefa"
+            placeholder="Digite sua tarefa..."
+            aria-describedby="dica-tarefa"
+          />
+          <button type="button" class="btn-tarefa">Adicionar</button>
+        </div>
+
+        <p id="dica-tarefa" class="dica">
+          Escreva <code>#casa</code> no texto para criar uma tag.
+        </p>
+
+        <details class="detalhes">
+          <summary>Prioridade, prazo e tags</summary>
+
+          <div class="detalhes-campos">
+            <div class="campo">
+              <label for="nova-prioridade">Prioridade</label>
+              <select id="nova-prioridade" class="campo-entrada">
+                <option value="alta">Alta</option>
+                <option value="media" selected>Média</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="nova-prazo">Prazo</label>
+              <input id="nova-prazo" class="campo-entrada" type="date" />
+            </div>
+
+            <div class="campo">
+              <label for="nova-tags">Tags</label>
+              <input
+                id="nova-tags"
+                class="campo-entrada"
+                type="text"
+                placeholder="casa, mercado"
+              />
+            </div>
+          </div>
+        </details>
       </section>
 
       <section class="topbar" aria-label="Resumo e filtros">
@@ -72,11 +109,31 @@
       <h2 id="titulo-editar">Editar tarefa</h2>
       <p class="modal-texto">Altere o texto da sua tarefa.</p>
 
-      <input
-        type="text"
-        class="input-editar"
-        placeholder="Edite sua tarefa"
-      />
+      <div class="campo">
+        <label for="editar-texto">Tarefa</label>
+        <input id="editar-texto" type="text" class="input-editar" />
+      </div>
+
+      <div class="detalhes-campos">
+        <div class="campo">
+          <label for="editar-prioridade">Prioridade</label>
+          <select id="editar-prioridade" class="campo-entrada">
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="editar-prazo">Prazo</label>
+          <input id="editar-prazo" class="campo-entrada" type="date" />
+        </div>
+
+        <div class="campo">
+          <label for="editar-tags">Tags</label>
+          <input id="editar-tags" class="campo-entrada" type="text" />
+        </div>
+      </div>
 
       <div class="modal-acoes">
         <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
