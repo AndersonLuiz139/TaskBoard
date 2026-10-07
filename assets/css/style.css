@@ -9,6 +9,7 @@
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
   --gray-400: #9ca3af;
+  --gray-500: #6b7280;
   --gray-600: #4b5563;
   --gray-800: #1f2937;
 }
@@ -24,6 +25,42 @@ body {
   background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
   min-height: 100vh;
   padding: 30px 16px 120px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.rotulo-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pular-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 1000;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--gray-800);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.2);
+  transition: top 0.2s ease;
+}
+
+.pular-link:focus {
+  top: 16px;
 }
 
 .app {
@@ -185,7 +222,7 @@ body {
 
 .mensagem-vazia {
   text-align: center;
-  color: var(--gray-400);
+  color: var(--gray-500);
   margin-top: 24px;
   display: none;
 }
@@ -217,7 +254,7 @@ body {
 
 .tarefa.concluida .tarefa-texto {
   text-decoration: line-through;
-  color: var(--gray-400);
+  color: var(--gray-500);
 }
 
 .tarefa-acoes {
@@ -451,7 +488,7 @@ body {
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: var(--gray-400);
+  color: var(--gray-500);
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
@@ -482,5 +519,22 @@ body {
 
   .tarefa-acoes {
     justify-content: flex-end;
+  }
+}
+
+/* Preferência de movimento reduzido */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tarefa:hover {
+    transform: none;
   }
 }

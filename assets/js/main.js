@@ -93,8 +93,12 @@ listaTarefas.addEventListener("change", (evento) => {
 
 elementos.filtros.forEach((botao) => {
   botao.addEventListener("click", () => {
-    elementos.filtros.forEach((filtro) => filtro.classList.remove("ativo"));
-    botao.classList.add("ativo");
+    elementos.filtros.forEach((filtro) => {
+      const ativo = filtro === botao;
+
+      filtro.classList.toggle("ativo", ativo);
+      filtro.setAttribute("aria-pressed", String(ativo));
+    });
 
     definirUI({ filtro: botao.dataset.filtro });
   });

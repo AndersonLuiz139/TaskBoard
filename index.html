@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
+  <a class="pular-link" href="#lista-tarefas">Pular para a lista de tarefas</a>
+
   <main class="app">
     <section class="todo-card">
       <header class="header">
@@ -19,28 +21,40 @@
       </header>
 
       <section class="nova-tarefa">
-        <input type="text" class="input-tarefa" placeholder="Digite sua tarefa..."/>
-        <button class="btn-tarefa">Adicionar</button>
+        <label class="rotulo-oculto" for="entrada-tarefa">Nova tarefa</label>
+        <input
+          id="entrada-tarefa"
+          type="text"
+          class="input-tarefa"
+          placeholder="Digite sua tarefa..."
+        />
+        <button type="button" class="btn-tarefa">Adicionar</button>
       </section>
 
-      <section class="topbar">
+      <section class="topbar" aria-label="Resumo e filtros">
         <div class="info">
-          <span>Total: <strong id="total">0</strong></span>
+          <span aria-live="polite">Total: <strong id="total">0</strong></span>
         </div>
 
-        <div class="filtros">
-          <button class="filtro ativo" data-filtro="todas">Todas</button>
-          <button class="filtro" data-filtro="pendentes">Pendentes</button>
-          <button class="filtro" data-filtro="concluidas">Concluídas</button>
+        <div class="filtros" role="group" aria-label="Filtrar tarefas">
+          <button type="button" class="filtro ativo" data-filtro="todas" aria-pressed="true">
+            Todas
+          </button>
+          <button type="button" class="filtro" data-filtro="pendentes" aria-pressed="false">
+            Pendentes
+          </button>
+          <button type="button" class="filtro" data-filtro="concluidas" aria-pressed="false">
+            Concluídas
+          </button>
         </div>
       </section>
 
-      <ul class="tarefas"></ul>
+      <ul class="tarefas" id="lista-tarefas"></ul>
 
-      <p class="mensagem-vazia">Você ainda não adicionou nenhuma tarefa.</p>
+      <p class="mensagem-vazia" role="status">Você ainda não adicionou nenhuma tarefa.</p>
 
       <div class="rodape-acoes">
-        <button class="btn-limpar">Limpar concluídas</button>
+        <button type="button" class="btn-limpar">Limpar concluídas</button>
       </div>
     </section>
   </main>

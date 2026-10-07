@@ -21,6 +21,10 @@ export function criarElementoTarefa(tarefa) {
   check.type = "checkbox";
   check.className = "check-tarefa";
   check.checked = tarefa.concluida;
+  check.setAttribute(
+    "aria-label",
+    tarefa.concluida ? `Reabrir: ${tarefa.texto}` : `Concluir: ${tarefa.texto}`,
+  );
 
   const texto = document.createElement("span");
   texto.className = "tarefa-texto";
@@ -32,16 +36,22 @@ export function criarElementoTarefa(tarefa) {
   acoes.className = "tarefa-acoes";
 
   const botoes = [
-    ["btn-editar", "Editar"],
-    ["btn-concluir", tarefa.concluida ? "Desfazer" : "Concluir"],
-    ["btn-apagar", "Apagar"],
+    ["btn-editar", "Editar", `Editar: ${tarefa.texto}`],
+    [
+      "btn-concluir",
+      tarefa.concluida ? "Desfazer" : "Concluir",
+      tarefa.concluida ? `Reabrir: ${tarefa.texto}` : `Concluir: ${tarefa.texto}`,
+    ],
+    ["btn-apagar", "Apagar", `Apagar: ${tarefa.texto}`],
   ];
 
-  botoes.forEach(([classe, rotulo]) => {
+  botoes.forEach(([classe, rotulo, rotuloAcessivel]) => {
     const botao = document.createElement("button");
 
+    botao.type = "button";
     botao.className = `btn-acao ${classe}`;
     botao.textContent = rotulo;
+    botao.setAttribute("aria-label", rotuloAcessivel);
 
     acoes.appendChild(botao);
   });
