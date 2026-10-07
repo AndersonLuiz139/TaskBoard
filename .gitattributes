@@ -1,0 +1,7 @@
+# Normaliza o fim de linha: LF no repositório e no disco, em qualquer sistema.
+* text=auto eol=lf
+
+# Binários não passam por conversão nem aparecem em diff de texto.
+*.png binary
+*.jpg binary
+*.ico binary
