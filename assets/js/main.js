@@ -415,3 +415,9 @@ if (usandoMemoria) {
     duracao: 12000,
   });
 }
+
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}

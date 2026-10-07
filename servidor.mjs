@@ -1,6 +1,8 @@
 // Servidor estático local
 //
 //   node servidor.mjs [porta]
+//
+//   Módulos ES e service worker exigem http: file:// não funciona.
 
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
@@ -16,6 +18,7 @@ const TIPOS = {
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".svg": "image/svg+xml",
