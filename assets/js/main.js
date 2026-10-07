@@ -12,6 +12,7 @@ import {
 import { abrirModal, confirmar, fecharModal, iniciarModais } from "./modais.js";
 import { renderizar } from "./render.js";
 import { usandoMemoria } from "./storage.js";
+import { mostrarToast } from "./toast.js";
 import {
   alternarConclusao,
   criarTarefa,
@@ -22,10 +23,14 @@ import {
 
 const { listaTarefas } = elementos;
 
+function recortar(texto, limite = 40) {
+  return texto.length > limite ? `${texto.slice(0, limite)}…` : texto;
+}
+
 function aplicar(transformacao) {
   const aviso = atualizarTarefas(transformacao);
 
-  if (aviso) console.warn(aviso);
+  if (aviso) mostrarToast(aviso, { tipo: "erro", duracao: 9000 });
 }
 
 function limparInput() {
@@ -96,7 +101,32 @@ elementos.filtros.forEach((botao) => {
 });
 
 elementos.btnLimpar.addEventListener("click", () => {
-  aplicar(limparConcluidas);
+  const concluidas = estado.tarefas.filter((tarefa) => tarefa.concluida);
+
+  if (concluidas.length === 0) {
+    mostrarToast("Nenhuma tarefa concluída para limpar.");
+    return;
+  }
+
+  confirmar({
+    titulo: "Limpar concluídas",
+    mensagem: `Isso vai apagar ${concluidas.length} tarefa${
+      concluidas.length > 1 ? "s" : ""
+    } concluída${concluidas.length > 1 ? "s" : ""}.`,
+    rotuloConfirmar: "Limpar",
+    aoConfirmar: () => {
+      const anterior = estado.tarefas;
+
+      aplicar(limparConcluidas);
+
+      mostrarToast(
+        `${concluidas.length} tarefa${concluidas.length > 1 ? "s" : ""} apagada${
+          concluidas.length > 1 ? "s" : ""
+        }.`,
+        { acao: { rotulo: "Desfazer", aoClicar: () => aplicar(anterior) } },
+      );
+    },
+  });
 });
 
 /* ------------------------------------------------------------------ *
@@ -131,7 +161,7 @@ function salvarEdicao() {
   const textoEditado = elementos.inputEditar.value.trim();
 
   if (!textoEditado) {
-    alert("A tarefa não pode ficar vazia.");
+    mostrarToast("A tarefa não pode ficar vazia.", { tipo: "erro" });
     return;
   }
 
@@ -165,8 +195,14 @@ function abrirModalApagar(id) {
     mensagem: `Tem certeza que deseja apagar "${tarefa.texto}"?`,
     rotuloConfirmar: "Apagar",
     aoConfirmar: () => {
+      const anterior = estado.tarefas;
+
       aplicar((tarefas) => removerTarefa(tarefas, id));
       elementos.inputTarefa.focus();
+
+      mostrarToast(`"${recortar(tarefa.texto)}" foi apagada.`, {
+        acao: { rotulo: "Desfazer", aoClicar: () => aplicar(anterior) },
+      });
     },
   });
 }
@@ -180,8 +216,11 @@ assinar(renderizar);
 
 const avisoInicial = iniciarEstado();
 
-if (avisoInicial) console.warn(avisoInicial);
+if (avisoInicial) mostrarToast(avisoInicial, { tipo: "erro", duracao: 12000 });
 
 if (usandoMemoria) {
-  console.warn("Sem armazenamento local: as tarefas serão perdidas ao fechar a aba.");
+  mostrarToast("Sem armazenamento local: as tarefas serão perdidas ao fechar a aba.", {
+    tipo: "erro",
+    duracao: 12000,
+  });
 }

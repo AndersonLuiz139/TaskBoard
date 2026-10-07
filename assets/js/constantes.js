@@ -5,3 +5,4 @@ export const CHAVE_BACKUP = "taskboard:tarefas-corrompidas";
 export const VERSAO_SCHEMA = 2;
 export const FILTROS = ["todas", "pendentes", "concluidas"];
 export const FILTRO_PADRAO = "todas";
+export const DURACAO_TOAST = 6000;

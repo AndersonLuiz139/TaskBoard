@@ -9,6 +9,7 @@ export const elementos = {
   total: q("#total"),
   mensagemVazia: q(".mensagem-vazia"),
   btnLimpar: q(".btn-limpar"),
+  toasts: q(".toasts"),
 
   modalEditar: q('[data-modal="editar"]'),
   inputEditar: q(".input-editar"),
