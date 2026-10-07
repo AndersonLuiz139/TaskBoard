@@ -1,5 +1,6 @@
 // Ponto de entrada
 
+import { CHAVE_TAREFAS } from "./constantes.js";
 import { elementos } from "./dom.js";
 import {
   assinar,
@@ -8,9 +9,11 @@ import {
   estado,
   iniciarEstado,
   obterTarefa,
+  sincronizarDeOutraAba,
 } from "./estado.js";
 import { abrirModal, confirmar, fecharModal, iniciarModais } from "./modais.js";
 import { renderizar } from "./render.js";
+import { iniciarTema } from "./tema.js";
 import { usandoMemoria } from "./storage.js";
 import { mostrarToast } from "./toast.js";
 import {
@@ -384,10 +387,22 @@ function abrirModalApagar(id) {
 }
 
 /* ------------------------------------------------------------------ *
+ * Sincronia entre abas
+ * ------------------------------------------------------------------ */
+
+window.addEventListener("storage", (evento) => {
+  if (evento.key !== CHAVE_TAREFAS) return;
+
+  sincronizarDeOutraAba();
+  mostrarToast("Lista atualizada por outra aba.");
+});
+
+/* ------------------------------------------------------------------ *
  * Inicialização
  * ------------------------------------------------------------------ */
 
 iniciarModais();
+iniciarTema();
 assinar(renderizar);
 
 const avisoInicial = iniciarEstado();

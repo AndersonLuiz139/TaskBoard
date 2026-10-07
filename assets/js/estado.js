@@ -68,6 +68,13 @@ export function definirUI(parcial) {
   notificar();
 }
 
+export function sincronizarDeOutraAba() {
+  const { tarefas } = storage.carregarTarefas();
+
+  estado.tarefas = tarefas;
+  notificar();
+}
+
 export function obterTarefa(id) {
   return estado.tarefas.find((tarefa) => tarefa.id === id) ?? null;
 }

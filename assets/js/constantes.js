@@ -15,3 +15,6 @@ export const PRIORIDADE_PADRAO = "media";
 export const ROTULO_PRIORIDADE = { alta: "Alta", media: "Média", baixa: "Baixa" };
 export const ORDEM_PRIORIDADE = { alta: 0, media: 1, baixa: 2 };
 export const LIMITE_TAGS = 5;
+export const CHAVE_TEMA = "taskboard:tema";
+export const TEMAS = ["sistema", "claro", "escuro"];
+export const TEMA_PADRAO = "sistema";

@@ -19,6 +19,9 @@ export const elementos = {
   mensagemVazia: q(".mensagem-vazia"),
   btnLimpar: q(".btn-limpar"),
   toasts: q(".toasts"),
+  btnTema: q(".btn-tema"),
+  iconeTema: q(".btn-tema-icone"),
+  rotuloTema: q(".btn-tema-rotulo"),
 
   modalEditar: q('[data-modal="editar"]'),
   inputEditar: q(".input-editar"),
