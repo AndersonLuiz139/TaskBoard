@@ -1,263 +1,273 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TaskBoard</title>
-  <meta
-    name="description"
-    content="Gerenciador de tarefas com prioridades, prazos, tags e busca. Funciona offline e salva tudo no próprio navegador."
-  />
-  <meta name="theme-color" content="#7c3aed" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskBoard</title>
+    <meta
+      name="description"
+      content="Gerenciador de tarefas com prioridades, prazos, tags e busca. Funciona offline e salva tudo no próprio navegador."
+    />
+    <meta name="theme-color" content="#7c3aed" />
 
-  <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
-  <link rel="apple-touch-icon" href="assets/img/icone-192.png" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
-</head>
-<body>
-  <a class="pular-link" href="#lista-tarefas">Pular para a lista de tarefas</a>
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="assets/img/icone-192.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <a class="pular-link" href="#lista-tarefas">Pular para a lista de tarefas</a>
 
-  <main class="app">
-    <section class="todo-card">
-      <header class="header">
-        <div>
-          <p class="tag">Organização pessoal</p>
-          <h1>TaskBoard</h1>
-          <p class="subtitle">Gerencie suas tarefas com mais praticidade.</p>
-        </div>
-
-        <button type="button" class="btn-tema" aria-live="polite">
-          <span class="btn-tema-icone" aria-hidden="true"></span>
-          <span class="btn-tema-rotulo">Tema do sistema</span>
-        </button>
-      </header>
-
-      <form class="nova-tarefa" novalidate>
-        <div class="campo">
-          <label for="entrada-tarefa">
-            Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
-          </label>
-          <input
-            id="entrada-tarefa"
-            type="text"
-            class="campo-entrada input-tarefa"
-            placeholder="Digite sua tarefa..."
-            autocomplete="off"
-            required
-            aria-required="true"
-            aria-describedby="dica-tarefa"
-          />
-          <p id="dica-tarefa" class="dica">
-            Escreva <code>#casa</code> no texto para criar uma tag.
-          </p>
-        </div>
-
-        <div class="campos-obrigatorios">
-          <div class="campo">
-            <label for="nova-prioridade">
-              Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
-            </label>
-            <select id="nova-prioridade" class="campo-entrada" required aria-required="true">
-              <option value="" disabled selected>Escolha a prioridade</option>
-              <option value="alta">Alta</option>
-              <option value="media">Média</option>
-              <option value="baixa">Baixa</option>
-            </select>
+    <main class="app">
+      <section class="todo-card">
+        <header class="header">
+          <div>
+            <p class="tag">Organização pessoal</p>
+            <h1>TaskBoard</h1>
+            <p class="subtitle">Gerencie suas tarefas com mais praticidade.</p>
           </div>
 
-          <div class="campo">
-            <label for="nova-prazo">
-              Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
-            </label>
-            <input id="nova-prazo" class="campo-entrada" type="date" required aria-required="true" />
-          </div>
+          <button type="button" class="btn-tema" aria-live="polite">
+            <span class="btn-tema-icone" aria-hidden="true"></span>
+            <span class="btn-tema-rotulo">Tema do sistema</span>
+          </button>
+        </header>
 
+        <form class="nova-tarefa" novalidate>
           <div class="campo">
-            <label for="nova-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
+            <label for="entrada-tarefa">
+              Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
             <input
-              id="nova-tags"
-              class="campo-entrada"
+              id="entrada-tarefa"
               type="text"
+              class="campo-entrada input-tarefa"
+              placeholder="Digite sua tarefa..."
               autocomplete="off"
-              placeholder="casa, mercado"
+              required
+              aria-required="true"
+              aria-describedby="dica-tarefa"
             />
+            <p id="dica-tarefa" class="dica">
+              Escreva <code>#casa</code> no texto para criar uma tag.
+            </p>
           </div>
-        </div>
 
-        <div class="nova-tarefa-rodape">
-          <p class="legenda-obrigatorio">
-            <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
-          </p>
+          <div class="campos-obrigatorios">
+            <div class="campo">
+              <label for="nova-prioridade">
+                Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <select id="nova-prioridade" class="campo-entrada" required aria-required="true">
+                <option value="" disabled selected>Escolha a prioridade</option>
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </div>
 
-          <button type="submit" class="btn-tarefa">Adicionar tarefa</button>
-        </div>
+            <div class="campo">
+              <label for="nova-prazo">
+                Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="nova-prazo"
+                class="campo-entrada"
+                type="date"
+                required
+                aria-required="true"
+              />
+            </div>
 
-        <p class="erro erro-nova" role="alert" hidden></p>
-      </form>
-
-      <div class="barra-busca">
-        <label class="rotulo-oculto" for="entrada-busca">Buscar tarefas</label>
-        <input
-          id="entrada-busca"
-          type="search"
-          class="input-busca"
-          placeholder="Buscar por texto ou #tag"
-        />
-        <button type="button" class="btn-limpar-busca" hidden>
-          Limpar<span class="rotulo-oculto"> busca</span>
-        </button>
-      </div>
-
-      <section class="topbar" aria-label="Resumo e filtros">
-        <div class="progresso">
-          <p class="progresso-texto" id="contador" aria-live="polite">
-            Nenhuma tarefa por aqui
-          </p>
-
-          <div
-            class="progresso-barra"
-            role="progressbar"
-            aria-labelledby="contador"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow="0"
-          >
-            <span class="progresso-preenchimento"></span>
+            <div class="campo">
+              <label for="nova-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
+              <input
+                id="nova-tags"
+                class="campo-entrada"
+                type="text"
+                autocomplete="off"
+                placeholder="casa, mercado"
+              />
+            </div>
           </div>
+
+          <div class="nova-tarefa-rodape">
+            <p class="legenda-obrigatorio">
+              <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
+            </p>
+
+            <button type="submit" class="btn-tarefa">Adicionar tarefa</button>
+          </div>
+
+          <p class="erro erro-nova" role="alert" hidden></p>
+        </form>
+
+        <div class="barra-busca">
+          <label class="rotulo-oculto" for="entrada-busca">Buscar tarefas</label>
+          <input
+            id="entrada-busca"
+            type="search"
+            class="input-busca"
+            placeholder="Buscar por texto ou #tag"
+          />
+          <button type="button" class="btn-limpar-busca" hidden>
+            Limpar<span class="rotulo-oculto"> busca</span>
+          </button>
         </div>
 
-        <div class="controles">
-          <div class="filtros" role="group" aria-label="Filtrar tarefas">
-            <button type="button" class="filtro ativo" data-filtro="todas" aria-pressed="true">
-              Todas <span class="filtro-contagem" data-contagem="total">0</span>
-            </button>
-            <button type="button" class="filtro" data-filtro="pendentes" aria-pressed="false">
-              Pendentes <span class="filtro-contagem" data-contagem="pendentes">0</span>
-            </button>
-            <button type="button" class="filtro" data-filtro="concluidas" aria-pressed="false">
-              Concluídas <span class="filtro-contagem" data-contagem="concluidas">0</span>
-            </button>
-            <button
-              type="button"
-              class="filtro filtro-atrasadas"
-              data-filtro="atrasadas"
-              aria-pressed="false"
+        <section class="topbar" aria-label="Resumo e filtros">
+          <div class="progresso">
+            <p class="progresso-texto" id="contador" aria-live="polite">Nenhuma tarefa por aqui</p>
+
+            <div
+              class="progresso-barra"
+              role="progressbar"
+              aria-labelledby="contador"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
             >
-              Atrasadas <span class="filtro-contagem" data-contagem="atrasadas">0</span>
-            </button>
+              <span class="progresso-preenchimento"></span>
+            </div>
           </div>
 
-          <div class="campo campo-ordenacao">
-            <label class="rotulo-oculto" for="select-ordenacao">Ordenar por</label>
-            <select id="select-ordenacao" class="campo-entrada">
-              <option value="manual">Ordem manual</option>
-              <option value="prioridade">Prioridade</option>
-              <option value="prazo">Prazo</option>
-              <option value="recentes">Mais recentes</option>
-              <option value="antigas">Mais antigas</option>
-            </select>
+          <div class="controles">
+            <div class="filtros" role="group" aria-label="Filtrar tarefas">
+              <button type="button" class="filtro ativo" data-filtro="todas" aria-pressed="true">
+                Todas <span class="filtro-contagem" data-contagem="total">0</span>
+              </button>
+              <button type="button" class="filtro" data-filtro="pendentes" aria-pressed="false">
+                Pendentes <span class="filtro-contagem" data-contagem="pendentes">0</span>
+              </button>
+              <button type="button" class="filtro" data-filtro="concluidas" aria-pressed="false">
+                Concluídas <span class="filtro-contagem" data-contagem="concluidas">0</span>
+              </button>
+              <button
+                type="button"
+                class="filtro filtro-atrasadas"
+                data-filtro="atrasadas"
+                aria-pressed="false"
+              >
+                Atrasadas <span class="filtro-contagem" data-contagem="atrasadas">0</span>
+              </button>
+            </div>
+
+            <div class="campo campo-ordenacao">
+              <label class="rotulo-oculto" for="select-ordenacao">Ordenar por</label>
+              <select id="select-ordenacao" class="campo-entrada">
+                <option value="manual">Ordem manual</option>
+                <option value="prioridade">Prioridade</option>
+                <option value="prazo">Prazo</option>
+                <option value="recentes">Mais recentes</option>
+                <option value="antigas">Mais antigas</option>
+              </select>
+            </div>
           </div>
+        </section>
+
+        <ul class="tarefas" id="lista-tarefas"></ul>
+
+        <p class="mensagem-vazia" role="status">Você ainda não adicionou nenhuma tarefa.</p>
+
+        <div class="rodape-acoes">
+          <button type="button" class="btn-limpar">Limpar concluídas</button>
         </div>
       </section>
+    </main>
 
-      <ul class="tarefas" id="lista-tarefas"></ul>
+    <div class="toasts" role="region" aria-label="Notificações" aria-live="polite"></div>
 
-      <p class="mensagem-vazia" role="status">Você ainda não adicionou nenhuma tarefa.</p>
+    <div class="modal-overlay hidden" data-modal="editar">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="titulo-editar"
+        tabindex="-1"
+      >
+        <h2 id="titulo-editar">Editar tarefa</h2>
+        <p class="modal-texto">Altere o texto, a prioridade, o prazo ou as tags.</p>
 
-      <div class="rodape-acoes">
-        <button type="button" class="btn-limpar">Limpar concluídas</button>
+        <form class="form-editar" novalidate>
+          <div class="campo">
+            <label for="editar-texto">
+              Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="editar-texto"
+              type="text"
+              class="campo-entrada input-editar"
+              autocomplete="off"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="campos-obrigatorios">
+            <div class="campo">
+              <label for="editar-prioridade">
+                Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <select id="editar-prioridade" class="campo-entrada" required aria-required="true">
+                <option value="" disabled>Escolha a prioridade</option>
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="editar-prazo">
+                Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="editar-prazo"
+                class="campo-entrada"
+                type="date"
+                required
+                aria-required="true"
+              />
+            </div>
+
+            <div class="campo">
+              <label for="editar-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
+              <input id="editar-tags" class="campo-entrada" type="text" autocomplete="off" />
+            </div>
+          </div>
+
+          <p class="erro erro-editar" role="alert" hidden></p>
+
+          <div class="modal-acoes">
+            <p class="legenda-obrigatorio">
+              <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
+            </p>
+
+            <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
+            <button type="submit" class="btn-salvar">Salvar</button>
+          </div>
+        </form>
       </div>
-    </section>
-  </main>
+    </div>
 
-  <div class="toasts" role="region" aria-label="Notificações" aria-live="polite"></div>
-
-  <div class="modal-overlay hidden" data-modal="editar">
-    <div
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-editar"
-      tabindex="-1"
-    >
-      <h2 id="titulo-editar">Editar tarefa</h2>
-      <p class="modal-texto">Altere o texto, a prioridade, o prazo ou as tags.</p>
-
-      <form class="form-editar" novalidate>
-        <div class="campo">
-          <label for="editar-texto">
-            Tarefa <span class="marca-obrigatorio" aria-hidden="true">*</span>
-          </label>
-          <input
-            id="editar-texto"
-            type="text"
-            class="campo-entrada input-editar"
-            autocomplete="off"
-            required
-            aria-required="true"
-          />
-        </div>
-
-        <div class="campos-obrigatorios">
-          <div class="campo">
-            <label for="editar-prioridade">
-              Prioridade <span class="marca-obrigatorio" aria-hidden="true">*</span>
-            </label>
-            <select id="editar-prioridade" class="campo-entrada" required aria-required="true">
-              <option value="" disabled>Escolha a prioridade</option>
-              <option value="alta">Alta</option>
-              <option value="media">Média</option>
-              <option value="baixa">Baixa</option>
-            </select>
-          </div>
-
-          <div class="campo">
-            <label for="editar-prazo">
-              Prazo <span class="marca-obrigatorio" aria-hidden="true">*</span>
-            </label>
-            <input id="editar-prazo" class="campo-entrada" type="date" required aria-required="true" />
-          </div>
-
-          <div class="campo">
-            <label for="editar-tags">Tags <span class="rotulo-opcional">(opcional)</span></label>
-            <input id="editar-tags" class="campo-entrada" type="text" autocomplete="off" />
-          </div>
-        </div>
-
-        <p class="erro erro-editar" role="alert" hidden></p>
+    <div class="modal-overlay hidden" data-modal="confirmar">
+      <div
+        class="modal modal-confirmacao"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="titulo-confirmar"
+        aria-describedby="texto-confirmar"
+        tabindex="-1"
+      >
+        <h2 id="titulo-confirmar">Apagar tarefa</h2>
+        <p class="modal-texto" id="texto-confirmar"></p>
 
         <div class="modal-acoes">
-          <p class="legenda-obrigatorio">
-            <span class="marca-obrigatorio" aria-hidden="true">*</span> Campos obrigatórios
-          </p>
-
-          <button type="button" class="btn-cancelar" data-fechar-modal>Cancelar</button>
-          <button type="submit" class="btn-salvar">Salvar</button>
+          <button type="button" class="btn-cancelar-modal" data-fechar-modal>Cancelar</button>
+          <button type="button" class="btn-confirmar">Apagar</button>
         </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-overlay hidden" data-modal="confirmar">
-    <div
-      class="modal modal-confirmacao"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-confirmar"
-      aria-describedby="texto-confirmar"
-      tabindex="-1"
-    >
-      <h2 id="titulo-confirmar">Apagar tarefa</h2>
-      <p class="modal-texto" id="texto-confirmar"></p>
-
-      <div class="modal-acoes">
-        <button type="button" class="btn-cancelar-modal" data-fechar-modal>Cancelar</button>
-        <button type="button" class="btn-confirmar">Apagar</button>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="assets/js/main.js"></script>
-</body>
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
 </html>

@@ -26,9 +26,7 @@ function focaveis(overlay) {
 }
 
 function isolarFundo(overlay) {
-  inertizados = [...document.body.children].filter(
-    (filho) => filho !== overlay && !filho.inert,
-  );
+  inertizados = [...document.body.children].filter((filho) => filho !== overlay && !filho.inert);
 
   inertizados.forEach((filho) => {
     filho.inert = true;

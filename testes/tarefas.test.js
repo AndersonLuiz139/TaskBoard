@@ -199,9 +199,24 @@ describe("filtrarTarefas", () => {
 
 describe("ordenarTarefas", () => {
   const lista = [
-    tarefa("a", "x", false, { ordem: 2, prioridade: "baixa", prazo: "2026-05-01", criadaEm: "2026-01-03T00:00:00.000Z" }),
-    tarefa("b", "y", false, { ordem: 0, prioridade: "alta", prazo: null, criadaEm: "2026-01-01T00:00:00.000Z" }),
-    tarefa("c", "z", false, { ordem: 1, prioridade: "media", prazo: "2026-04-01", criadaEm: "2026-01-02T00:00:00.000Z" }),
+    tarefa("a", "x", false, {
+      ordem: 2,
+      prioridade: "baixa",
+      prazo: "2026-05-01",
+      criadaEm: "2026-01-03T00:00:00.000Z",
+    }),
+    tarefa("b", "y", false, {
+      ordem: 0,
+      prioridade: "alta",
+      prazo: null,
+      criadaEm: "2026-01-01T00:00:00.000Z",
+    }),
+    tarefa("c", "z", false, {
+      ordem: 1,
+      prioridade: "media",
+      prazo: "2026-04-01",
+      criadaEm: "2026-01-02T00:00:00.000Z",
+    }),
   ];
   const ids = (ordem) => ordenarTarefas(lista, ordem).map((t) => t.id);
 
@@ -249,7 +264,9 @@ describe("reordenar e mover", () => {
 
   it("renumera a ordem sem deixar buracos", () => {
     assert.deepEqual(
-      reordenar(lista, "c", "a", "antes").map((t) => t.ordem).sort(),
+      reordenar(lista, "c", "a", "antes")
+        .map((t) => t.ordem)
+        .sort(),
       [0, 1, 2],
     );
   });

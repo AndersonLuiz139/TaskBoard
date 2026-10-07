@@ -44,9 +44,7 @@ export function iniciarEstado() {
 
 export function atualizarTarefas(transformacao) {
   estado.tarefas =
-    typeof transformacao === "function"
-      ? transformacao(estado.tarefas)
-      : transformacao;
+    typeof transformacao === "function" ? transformacao(estado.tarefas) : transformacao;
 
   const { aviso } = storage.salvarTarefas(estado.tarefas);
 

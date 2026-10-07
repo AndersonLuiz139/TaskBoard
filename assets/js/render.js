@@ -3,13 +3,7 @@ import { ROTULO_PRIORIDADE } from "./constantes.js";
 import { elementos } from "./dom.js";
 import { estado } from "./estado.js";
 import { criadaEmCompleta, prazoCompleto, prazoNeutro, rotuloPrazo } from "./formato.js";
-import {
-  contar,
-  estaAtrasada,
-  filtrarTarefas,
-  hojeISO,
-  ordenarTarefas,
-} from "./tarefas.js";
+import { contar, estaAtrasada, filtrarTarefas, hojeISO, ordenarTarefas } from "./tarefas.js";
 
 function criarMeta(tarefa, hoje) {
   const meta = document.createElement("div");

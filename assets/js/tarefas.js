@@ -1,10 +1,5 @@
 // Regras de domínio
-import {
-  LIMITE_TAGS,
-  ORDEM_PRIORIDADE,
-  PRIORIDADES,
-  PRIORIDADE_PADRAO,
-} from "./constantes.js";
+import { LIMITE_TAGS, ORDEM_PRIORIDADE, PRIORIDADES, PRIORIDADE_PADRAO } from "./constantes.js";
 
 export function gerarId() {
   if (typeof crypto.randomUUID === "function") {
@@ -36,13 +31,7 @@ export function normalizarTags(valor) {
   const bruta = Array.isArray(valor) ? valor : String(valor ?? "").split(/[,\s]+/);
 
   const limpas = bruta
-    .map((tag) =>
-      String(tag)
-        .trim()
-        .replace(/^#+/, "")
-        .replace(/\s+/g, "-")
-        .toLowerCase(),
-    )
+    .map((tag) => String(tag).trim().replace(/^#+/, "").replace(/\s+/g, "-").toLowerCase())
     .filter(Boolean);
 
   return [...new Set(limpas)].slice(0, LIMITE_TAGS);
@@ -180,8 +169,7 @@ export function ordenarTarefas(tarefas, ordenacao) {
   switch (ordenacao) {
     case "prioridade":
       return copia.sort(
-        (a, b) =>
-          ORDEM_PRIORIDADE[a.prioridade] - ORDEM_PRIORIDADE[b.prioridade] || porOrdem(a, b),
+        (a, b) => ORDEM_PRIORIDADE[a.prioridade] - ORDEM_PRIORIDADE[b.prioridade] || porOrdem(a, b),
       );
     case "prazo":
       return copia.sort((a, b) => compararPrazo(a, b) || porOrdem(a, b));

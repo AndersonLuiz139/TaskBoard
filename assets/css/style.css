@@ -534,7 +534,6 @@ body {
   color: white;
 }
 
-
 /* Campos de detalhe e etiquetas */
 
 .dica {
@@ -550,7 +549,6 @@ body {
   font-family: ui-monospace, monospace;
   font-size: 0.78rem;
 }
-
 
 .campos-obrigatorios {
   display: grid;

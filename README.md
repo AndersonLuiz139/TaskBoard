@@ -4,8 +4,8 @@ Gerenciador de tarefas em **HTML, CSS e JavaScript puro** — sem framework, sem
 bundler, sem nenhuma dependência instalada. Os dados ficam no próprio navegador
 e o app funciona offline.
 
-| Tema claro | Tema escuro |
-| --- | --- |
+| Tema claro                                                    | Tema escuro                                                     |
+| ------------------------------------------------------------- | --------------------------------------------------------------- |
 | ![TaskBoard no tema claro](assets/img/captura-tema-claro.jpg) | ![TaskBoard no tema escuro](assets/img/captura-tema-escuro.jpg) |
 
 ## ✨ Funcionalidades
@@ -75,13 +75,13 @@ ids repetidos, registros inválidos e armazenamento cheio.
 
 ## ⌨️ Teclado
 
-| Tecla | Ação |
-| --- | --- |
-| `Enter` | Adiciona a tarefa / salva a edição |
-| `Esc` | Fecha o modal ou cancela a edição rápida |
-| `Tab` | Navega; dentro de um modal o foco fica preso nele |
+| Tecla             | Ação                                              |
+| ----------------- | ------------------------------------------------- |
+| `Enter`           | Adiciona a tarefa / salva a edição                |
+| `Esc`             | Fecha o modal ou cancela a edição rápida          |
+| `Tab`             | Navega; dentro de um modal o foco fica preso nele |
 | `Alt` + `↑` / `↓` | Move a tarefa na ordem manual, com a alça em foco |
-| Duplo clique | Edita o texto no próprio item |
+| Duplo clique      | Edita o texto no próprio item                     |
 
 ## 📁 Estrutura
 

@@ -30,9 +30,7 @@ self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches
       .open(VERSAO)
-      .then((cache) =>
-        Promise.all(ARQUIVOS.map((arquivo) => cache.add(arquivo).catch(() => null))),
-      )
+      .then((cache) => Promise.all(ARQUIVOS.map((arquivo) => cache.add(arquivo).catch(() => null))))
       .then(() => self.skipWaiting()),
   );
 });

@@ -1,16 +1,6 @@
 // Persistência
-import {
-  CHAVE_BACKUP,
-  CHAVE_LEGADA,
-  CHAVE_TAREFAS,
-  VERSAO_SCHEMA,
-} from "./constantes.js";
-import {
-  gerarId,
-  normalizarPrazo,
-  normalizarPrioridade,
-  normalizarTags,
-} from "./tarefas.js";
+import { CHAVE_BACKUP, CHAVE_LEGADA, CHAVE_TAREFAS, VERSAO_SCHEMA } from "./constantes.js";
+import { gerarId, normalizarPrazo, normalizarPrioridade, normalizarTags } from "./tarefas.js";
 
 export function criarDepositoMemoria() {
   const mapa = new Map();
