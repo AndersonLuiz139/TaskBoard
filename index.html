@@ -68,21 +68,68 @@
         </details>
       </section>
 
+      <div class="barra-busca">
+        <label class="rotulo-oculto" for="entrada-busca">Buscar tarefas</label>
+        <input
+          id="entrada-busca"
+          type="search"
+          class="input-busca"
+          placeholder="Buscar por texto ou #tag"
+        />
+        <button type="button" class="btn-limpar-busca" hidden>
+          Limpar<span class="rotulo-oculto"> busca</span>
+        </button>
+      </div>
+
       <section class="topbar" aria-label="Resumo e filtros">
-        <div class="info">
-          <span aria-live="polite">Total: <strong id="total">0</strong></span>
+        <div class="progresso">
+          <p class="progresso-texto" id="contador" aria-live="polite">
+            Nenhuma tarefa por aqui
+          </p>
+
+          <div
+            class="progresso-barra"
+            role="progressbar"
+            aria-labelledby="contador"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <span class="progresso-preenchimento"></span>
+          </div>
         </div>
 
-        <div class="filtros" role="group" aria-label="Filtrar tarefas">
-          <button type="button" class="filtro ativo" data-filtro="todas" aria-pressed="true">
-            Todas
-          </button>
-          <button type="button" class="filtro" data-filtro="pendentes" aria-pressed="false">
-            Pendentes
-          </button>
-          <button type="button" class="filtro" data-filtro="concluidas" aria-pressed="false">
-            Concluídas
-          </button>
+        <div class="controles">
+          <div class="filtros" role="group" aria-label="Filtrar tarefas">
+            <button type="button" class="filtro ativo" data-filtro="todas" aria-pressed="true">
+              Todas <span class="filtro-contagem" data-contagem="total">0</span>
+            </button>
+            <button type="button" class="filtro" data-filtro="pendentes" aria-pressed="false">
+              Pendentes <span class="filtro-contagem" data-contagem="pendentes">0</span>
+            </button>
+            <button type="button" class="filtro" data-filtro="concluidas" aria-pressed="false">
+              Concluídas <span class="filtro-contagem" data-contagem="concluidas">0</span>
+            </button>
+            <button
+              type="button"
+              class="filtro filtro-atrasadas"
+              data-filtro="atrasadas"
+              aria-pressed="false"
+            >
+              Atrasadas <span class="filtro-contagem" data-contagem="atrasadas">0</span>
+            </button>
+          </div>
+
+          <div class="campo campo-ordenacao">
+            <label class="rotulo-oculto" for="select-ordenacao">Ordenar por</label>
+            <select id="select-ordenacao" class="campo-entrada">
+              <option value="manual">Ordem manual</option>
+              <option value="prioridade">Prioridade</option>
+              <option value="prazo">Prazo</option>
+              <option value="recentes">Mais recentes</option>
+              <option value="antigas">Mais antigas</option>
+            </select>
+          </div>
         </div>
       </section>
 

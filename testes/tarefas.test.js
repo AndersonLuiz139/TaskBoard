@@ -11,6 +11,8 @@ import {
   normalizarPrazo,
   normalizarTags,
   separarTextoETags,
+  ordenarTarefas,
+  contar,
   filtrarTarefas,
   gerarId,
   limparConcluidas,
@@ -113,36 +115,98 @@ describe("estaAtrasada", () => {
 });
 
 describe("filtrarTarefas", () => {
+  const hoje = "2026-03-15";
   const lista = [
-    tarefa("1", "comprar pão"),
+    tarefa("1", "comprar pão", false, { tags: ["mercado"] }),
     tarefa("2", "pagar conta", true),
-    tarefa("3", "ligar para o médico"),
+    tarefa("3", "ligar para o médico", false, { prazo: "2026-03-01" }),
   ];
+  const ids = (opcoes) => filtrarTarefas(lista, { hoje, ...opcoes }).map((t) => t.id);
 
   it("devolve tudo em todas", () => {
-    assert.equal(filtrarTarefas(lista, "todas").length, 3);
+    assert.equal(ids({ filtro: "todas" }).length, 3);
   });
 
-  it("devolve só as pendentes", () => {
-    assert.deepEqual(
-      filtrarTarefas(lista, "pendentes").map((t) => t.id),
-      ["1", "3"],
-    );
+  it("filtra por situação", () => {
+    assert.deepEqual(ids({ filtro: "pendentes" }), ["1", "3"]);
+    assert.deepEqual(ids({ filtro: "concluidas" }), ["2"]);
+    assert.deepEqual(ids({ filtro: "atrasadas" }), ["3"]);
   });
 
-  it("devolve só as concluídas", () => {
-    assert.deepEqual(
-      filtrarTarefas(lista, "concluidas").map((t) => t.id),
-      ["2"],
-    );
+  it("busca no texto e nas tags", () => {
+    assert.deepEqual(ids({ busca: "pão" }), ["1"]);
+    assert.deepEqual(ids({ busca: "#mercado" }), ["1"]);
+    assert.deepEqual(ids({ busca: "MÉDICO" }), ["3"]);
+    assert.deepEqual(ids({ busca: "inexistente" }), []);
+  });
+
+  it("combina filtro e busca", () => {
+    assert.deepEqual(ids({ filtro: "concluidas", busca: "pão" }), []);
+    assert.deepEqual(ids({ filtro: "pendentes", busca: "pão" }), ["1"]);
   });
 
   it("não altera a lista recebida", () => {
     const copia = [...lista];
 
-    filtrarTarefas(lista, "pendentes");
+    filtrarTarefas(lista, { filtro: "pendentes" });
 
     assert.deepEqual(lista, copia);
+  });
+});
+
+describe("ordenarTarefas", () => {
+  const lista = [
+    tarefa("a", "x", false, { prioridade: "baixa", prazo: "2026-05-01", criadaEm: "2026-01-03T00:00:00.000Z" }),
+    tarefa("b", "y", false, { prioridade: "alta", prazo: null, criadaEm: "2026-01-01T00:00:00.000Z" }),
+    tarefa("c", "z", false, { prioridade: "media", prazo: "2026-04-01", criadaEm: "2026-01-02T00:00:00.000Z" }),
+  ];
+  const ids = (ordem) => ordenarTarefas(lista, ordem).map((t) => t.id);
+
+  it("mantém a ordem da lista no modo manual", () => {
+    assert.deepEqual(ids("manual"), ["a", "b", "c"]);
+  });
+
+  it("ordena por prioridade", () => {
+    assert.deepEqual(ids("prioridade"), ["b", "c", "a"]);
+  });
+
+  it("joga quem não tem prazo para o fim", () => {
+    assert.deepEqual(ids("prazo"), ["c", "a", "b"]);
+  });
+
+  it("ordena por data de criação nos dois sentidos", () => {
+    assert.deepEqual(ids("recentes"), ["a", "c", "b"]);
+    assert.deepEqual(ids("antigas"), ["b", "c", "a"]);
+  });
+
+  it("não altera a lista recebida", () => {
+    const copia = [...lista];
+
+    ordenarTarefas(lista, "prioridade");
+
+    assert.deepEqual(lista, copia);
+  });
+});
+
+describe("contar", () => {
+  it("resume totais, atrasadas e percentual", () => {
+    const lista = [
+      tarefa("a", "x", true),
+      tarefa("b", "y"),
+      tarefa("c", "z", false, { prazo: "2026-01-01" }),
+    ];
+
+    assert.deepEqual(contar(lista, "2026-03-15"), {
+      total: 3,
+      concluidas: 1,
+      pendentes: 2,
+      atrasadas: 1,
+      percentual: 33,
+    });
+  });
+
+  it("não divide por zero na lista vazia", () => {
+    assert.equal(contar([]).percentual, 0);
   });
 });
 

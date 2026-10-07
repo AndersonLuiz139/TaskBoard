@@ -163,3 +163,24 @@ export function salvarTarefas(tarefas, alvo = deposito) {
     };
   }
 }
+
+export function lerPreferencia(chave, padrao, permitidos = null, alvo = deposito) {
+  try {
+    const valor = alvo.getItem(chave);
+
+    if (valor === null) return padrao;
+    if (permitidos && !permitidos.includes(valor)) return padrao;
+
+    return valor;
+  } catch {
+    return padrao;
+  }
+}
+
+export function salvarPreferencia(chave, valor, alvo = deposito) {
+  try {
+    alvo.setItem(chave, String(valor));
+  } catch {
+    /* preferência é descartável */
+  }
+}

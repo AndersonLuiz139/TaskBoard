@@ -86,6 +86,13 @@ listaTarefas.addEventListener("click", (evento) => {
   if (evento.target.classList.contains("btn-editar")) {
     abrirModalEdicao(id);
   }
+
+  if (evento.target.classList.contains("etiqueta-tag")) {
+    const busca = `#${evento.target.dataset.tag}`;
+
+    elementos.entradaBusca.value = busca;
+    definirUI({ busca, filtro: "todas" });
+  }
 });
 
 listaTarefas.addEventListener("change", (evento) => {
@@ -104,16 +111,21 @@ listaTarefas.addEventListener("change", (evento) => {
  * ------------------------------------------------------------------ */
 
 elementos.filtros.forEach((botao) => {
-  botao.addEventListener("click", () => {
-    elementos.filtros.forEach((filtro) => {
-      const ativo = filtro === botao;
+  botao.addEventListener("click", () => definirUI({ filtro: botao.dataset.filtro }));
+});
 
-      filtro.classList.toggle("ativo", ativo);
-      filtro.setAttribute("aria-pressed", String(ativo));
-    });
+elementos.entradaBusca.addEventListener("input", (evento) => {
+  definirUI({ busca: evento.target.value });
+});
 
-    definirUI({ filtro: botao.dataset.filtro });
-  });
+elementos.btnLimparBusca.addEventListener("click", () => {
+  elementos.entradaBusca.value = "";
+  definirUI({ busca: "" });
+  elementos.entradaBusca.focus();
+});
+
+elementos.selectOrdenacao.addEventListener("change", (evento) => {
+  definirUI({ ordenacao: evento.target.value });
 });
 
 elementos.btnLimpar.addEventListener("click", () => {

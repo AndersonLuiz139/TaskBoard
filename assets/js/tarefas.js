@@ -1,5 +1,10 @@
 // Regras de domínio
-import { LIMITE_TAGS, PRIORIDADES, PRIORIDADE_PADRAO } from "./constantes.js";
+import {
+  LIMITE_TAGS,
+  ORDEM_PRIORIDADE,
+  PRIORIDADES,
+  PRIORIDADE_PADRAO,
+} from "./constantes.js";
 
 export function gerarId() {
   if (typeof crypto.randomUUID === "function") {
@@ -75,16 +80,63 @@ export function estaAtrasada(tarefa, hoje = hojeISO()) {
   return !tarefa.concluida && Boolean(tarefa.prazo) && tarefa.prazo < hoje;
 }
 
-export function filtrarTarefas(tarefas, filtro) {
-  if (filtro === "pendentes") {
-    return tarefas.filter((tarefa) => !tarefa.concluida);
-  }
+export function filtrarTarefas(tarefas, { filtro = "todas", busca = "", hoje = hojeISO() } = {}) {
+  const termo = String(busca ?? "")
+    .trim()
+    .toLowerCase();
 
-  if (filtro === "concluidas") {
-    return tarefas.filter((tarefa) => tarefa.concluida);
-  }
+  return tarefas.filter((tarefa) => {
+    if (filtro === "pendentes" && tarefa.concluida) return false;
+    if (filtro === "concluidas" && !tarefa.concluida) return false;
+    if (filtro === "atrasadas" && !estaAtrasada(tarefa, hoje)) return false;
 
-  return tarefas;
+    if (!termo) return true;
+
+    const alvo = `${tarefa.texto} ${tarefa.tags.map((tag) => `#${tag}`).join(" ")}`;
+
+    return alvo.toLowerCase().includes(termo);
+  });
+}
+
+function compararPrazo(a, b) {
+  if (!a.prazo && !b.prazo) return 0;
+  if (!a.prazo) return 1;
+  if (!b.prazo) return -1;
+
+  return a.prazo.localeCompare(b.prazo);
+}
+
+export function ordenarTarefas(tarefas, ordenacao) {
+  const copia = [...tarefas];
+
+  switch (ordenacao) {
+    case "prioridade":
+      return copia.sort(
+        (a, b) => ORDEM_PRIORIDADE[a.prioridade] - ORDEM_PRIORIDADE[b.prioridade],
+      );
+    case "prazo":
+      return copia.sort(compararPrazo);
+    case "recentes":
+      return copia.sort((a, b) => String(b.criadaEm).localeCompare(String(a.criadaEm)));
+    case "antigas":
+      return copia.sort((a, b) => String(a.criadaEm).localeCompare(String(b.criadaEm)));
+    default:
+      return copia;
+  }
+}
+
+export function contar(tarefas, hoje = hojeISO()) {
+  const total = tarefas.length;
+  const concluidas = tarefas.filter((tarefa) => tarefa.concluida).length;
+  const atrasadas = tarefas.filter((tarefa) => estaAtrasada(tarefa, hoje)).length;
+
+  return {
+    total,
+    concluidas,
+    pendentes: total - concluidas,
+    atrasadas,
+    percentual: total === 0 ? 0 : Math.round((concluidas / total) * 100),
+  };
 }
 
 export function alternarConclusao(tarefas, id) {

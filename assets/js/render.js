@@ -3,7 +3,13 @@ import { ROTULO_PRIORIDADE } from "./constantes.js";
 import { elementos } from "./dom.js";
 import { estado } from "./estado.js";
 import { criadaEmCompleta, prazoCompleto, prazoNeutro, rotuloPrazo } from "./formato.js";
-import { estaAtrasada, filtrarTarefas, hojeISO } from "./tarefas.js";
+import {
+  contar,
+  estaAtrasada,
+  filtrarTarefas,
+  hojeISO,
+  ordenarTarefas,
+} from "./tarefas.js";
 
 function criarMeta(tarefa, hoje) {
   const meta = document.createElement("div");
@@ -30,10 +36,13 @@ function criarMeta(tarefa, hoje) {
   }
 
   tarefa.tags.forEach((tag) => {
-    const etiqueta = document.createElement("span");
+    const etiqueta = document.createElement("button");
 
+    etiqueta.type = "button";
     etiqueta.className = "etiqueta etiqueta-tag";
+    etiqueta.dataset.tag = tag;
     etiqueta.textContent = `#${tag}`;
+    etiqueta.setAttribute("aria-label", `Filtrar pela tag ${tag}`);
 
     meta.appendChild(etiqueta);
   });
@@ -106,12 +115,49 @@ export function criarElementoTarefa(tarefa, hoje) {
   return li;
 }
 
-function atualizarContador() {
-  elementos.total.innerText = estado.tarefas.length;
+function textoVazio(numeros) {
+  if (estado.busca.trim()) {
+    return `Nenhuma tarefa encontrada para "${estado.busca.trim()}".`;
+  }
+
+  if (numeros.total === 0) return "Você ainda não adicionou nenhuma tarefa.";
+
+  const porFiltro = {
+    pendentes: "Nenhuma tarefa pendente. Tudo em ordem!",
+    concluidas: "Nenhuma tarefa concluída ainda.",
+    atrasadas: "Nenhuma tarefa atrasada.",
+  };
+
+  return porFiltro[estado.filtro] ?? "Nenhuma tarefa para mostrar.";
 }
 
-function mostrarMensagemVazia(listaFiltrada) {
-  elementos.mensagemVazia.style.display = listaFiltrada.length === 0 ? "block" : "none";
+function atualizarResumo(numeros) {
+  const { total, concluidas, atrasadas, percentual } = numeros;
+
+  elementos.contador.textContent =
+    total === 0
+      ? "Nenhuma tarefa por aqui"
+      : `${concluidas} de ${total} concluída${total > 1 ? "s" : ""}` +
+        (atrasadas > 0 ? ` · ${atrasadas} atrasada${atrasadas > 1 ? "s" : ""}` : "");
+
+  elementos.barraProgresso.setAttribute("aria-valuenow", String(percentual));
+  elementos.barraProgresso.title = `${percentual}% concluído`;
+  elementos.preenchimentoProgresso.style.width = `${percentual}%`;
+
+  elementos.contagens.forEach((span) => {
+    span.textContent = String(numeros[span.dataset.contagem] ?? 0);
+  });
+
+  elementos.filtros.forEach((botao) => {
+    const ativo = botao.dataset.filtro === estado.filtro;
+
+    botao.classList.toggle("ativo", ativo);
+    botao.setAttribute("aria-pressed", String(ativo));
+
+    if (botao.dataset.filtro === "atrasadas") {
+      botao.classList.toggle("tem-atrasadas", numeros.atrasadas > 0);
+    }
+  });
 }
 
 export function renderizar() {
@@ -119,12 +165,29 @@ export function renderizar() {
 
   elementos.listaTarefas.innerHTML = "";
 
-  const tarefasFiltradas = filtrarTarefas(estado.tarefas, estado.filtro);
+  const visiveis = ordenarTarefas(
+    filtrarTarefas(estado.tarefas, {
+      filtro: estado.filtro,
+      busca: estado.busca,
+      hoje,
+    }),
+    estado.ordenacao,
+  );
 
-  tarefasFiltradas.forEach((tarefa) => {
+  visiveis.forEach((tarefa) => {
     elementos.listaTarefas.appendChild(criarElementoTarefa(tarefa, hoje));
   });
 
-  atualizarContador();
-  mostrarMensagemVazia(tarefasFiltradas);
+  const numeros = contar(estado.tarefas, hoje);
+
+  atualizarResumo(numeros);
+
+  const vazio = visiveis.length === 0;
+
+  elementos.mensagemVazia.textContent = vazio ? textoVazio(numeros) : "";
+  elementos.mensagemVazia.hidden = !vazio;
+
+  elementos.selectOrdenacao.value = estado.ordenacao;
+  elementos.btnLimparBusca.hidden = estado.busca.trim() === "";
+  elementos.btnLimpar.disabled = numeros.concluidas === 0;
 }

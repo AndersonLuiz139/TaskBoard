@@ -1,10 +1,19 @@
 // Estado central
-import { FILTRO_PADRAO } from "./constantes.js";
+import {
+  CHAVE_FILTRO,
+  CHAVE_ORDENACAO,
+  FILTROS,
+  FILTRO_PADRAO,
+  ORDENACOES,
+  ORDENACAO_PADRAO,
+} from "./constantes.js";
 import * as storage from "./storage.js";
 
 export const estado = {
   tarefas: [],
   filtro: FILTRO_PADRAO,
+  busca: "",
+  ordenacao: ORDENACAO_PADRAO,
   tarefaEmEdicaoId: null,
   tarefaParaApagarId: null,
 };
@@ -24,6 +33,9 @@ export function iniciarEstado() {
   const { tarefas, aviso } = storage.carregarTarefas();
 
   estado.tarefas = tarefas;
+  estado.filtro = storage.lerPreferencia(CHAVE_FILTRO, FILTRO_PADRAO, FILTROS);
+  estado.ordenacao = storage.lerPreferencia(CHAVE_ORDENACAO, ORDENACAO_PADRAO, ORDENACOES);
+
   notificar();
   return aviso;
 }
@@ -42,6 +54,15 @@ export function atualizarTarefas(transformacao) {
 
 export function definirUI(parcial) {
   Object.assign(estado, parcial);
+
+  if (parcial.filtro !== undefined) {
+    storage.salvarPreferencia(CHAVE_FILTRO, parcial.filtro);
+  }
+
+  if (parcial.ordenacao !== undefined) {
+    storage.salvarPreferencia(CHAVE_ORDENACAO, parcial.ordenacao);
+  }
+
   notificar();
 }
 
